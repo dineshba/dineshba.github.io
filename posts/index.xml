@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My Website</title>
-    <link>https://dineshba.github.io/</link>
-    <description>Recent content on My Website</description>
+    <title>Posts on My Website</title>
+    <link>https://dineshba.github.io/posts/</link>
+    <description>Recent content in Posts on My Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 27 Aug 2019 22:56:45 +0530</lastBuildDate>
     
-	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -21,16 +21,6 @@
 To create independent shell from current shell Usual way:
 $ bash # created a bash shell $ #do whatever you wanted $ exit # will go back to the shell which it created  Using exec:
 $ exec bash #created a bash shell and killed the current shell $ #do whatever you wanted $ exit # will not go back to the shell which it created.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://dineshba.github.io/about/</link>
-      <pubDate>Mon, 26 Aug 2019 20:05:50 +0530</pubDate>
-      
-      <guid>https://dineshba.github.io/about/</guid>
-      <description> AboutMe I am a full stack developer. Worked/Working on technologies such as
- Devops  Kubernetes Terraform Docker Helm Vagrant  Mobile  iOS Flutter Android Ionic React Native (Basics)  Web  Angular Angular2 Javascript/es6/typescript React  Backend  Elixir Java Node  CI/CD  GoCD Gitlab Travis   </description>
     </item>
     
   </channel>

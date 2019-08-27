@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Exec &middot; My Website</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="My Website" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">My Website</h2>
+				</a>
+				<ul>
+    <li><a href="/about">About</a></li>
+    <li><a href="/">Posts</a></li>
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2019-08-27 22:56:45 &#43;0530 &#43;0530">August 27, 2019</time>
+</div>
+		<h1 class="post-title">Exec</h1>
+<div class="post-line"></div>
+
+		
+
+		
+
+<h2 id="exec-buildin-command">exec (buildin command)</h2>
+
+<p>We can use exec for two use cases (as far as I learned today :-P)</p>
+
+<h4 id="to-create-independent-shell-from-current-shell">To create independent shell from current shell</h4>
+
+<p>Usual way:</p>
+
+<pre><code class="language-bash">$ bash # created a bash shell
+$ #do whatever you wanted
+$ exit # will go back to the shell which it created
+</code></pre>
+
+<p>Using exec:</p>
+
+<pre><code class="language-bash">$ exec bash #created a bash shell and killed the current shell
+$ #do whatever you wanted
+$ exit  # will not go back to the shell which it created.
+</code></pre>
+
+<h4 id="to-change-output-error-stream-of-current-process">To change output/error stream of current process</h4>
+
+<pre><code class="language-bash">$ echo 'Hi'        # printed in output stream
+$ echo 'Hi' 1&gt;&amp;2   # printed in error stream (output -&gt; error)
+$ exec 2&gt;/dev/null # redirect error stream of current process to null (error -&gt; null)
+$ echo 'Hi' 1&gt;&amp;2   # will not get printed (as output -&gt; error -&gt; null)
+$ exec 1&gt;/dev/null # redirect output stream of current process to null (output -&gt; null)
+$ echo 'Hi' # will not get printed (as output -&gt; null)
+</code></pre>
+
+<h3 id="links">Links</h3>
+
+<ul>
+<li><a href="https://unix.stackexchange.com/questions/374008/what-does-do-in-the-middle-of-exec-dev-null">https://unix.stackexchange.com/questions/374008/what-does-do-in-the-middle-of-exec-dev-null</a></li>
+<li><a href="https://www.computerhope.com/unix/bash/exec.htm">https://www.computerhope.com/unix/bash/exec.htm</a></li>
+</ul>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/about/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2019-08-27 17:52:38.8650377 &#43;0000 UTC m=&#43;0.057393569">2019</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
