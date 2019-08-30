@@ -52,10 +52,23 @@
     <div class="posts">
 <article class="post">
   <h1 class="post-title">
-    <a href="https://dineshba.github.io/posts/exec/">Exec</a>
+    <a href="https://dineshba.github.io/posts/fzf/">How I am using fzf for every 5 min of my programming life</a>
+  </h1>
+  <time datetime="2019-08-31T00:41:10&#43;0530" class="post-date">Sat, Aug 31, 2019</time>
+  Installation for new users $ brew install fzf $ $(brew --prefix)/opt/fzf/install # useful key bindings and fuzzy completion   Note: Its better to use key bindings and fuzzy completion
+ Default options that I use export FZF_DEFAULT_OPTS='--height 40% --reverse --border'  My usages To Search in command history: CTRL + R
+To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd ** + TAB  To find and open files in vim(or any editor): vim $(fzf) vim + (CTRL + T) vim ** + TAB vim $(fzf --preview 'cat {}')   You can even search and open multiple files using tab
+  
+  <div class="read-more-link">
+    <a href="/posts/fzf/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="https://dineshba.github.io/posts/exec/">Super cool exec command</a>
   </h1>
   <time datetime="2019-08-27T22:56:45&#43;0530" class="post-date">Tue, Aug 27, 2019</time>
-  exec (buildin command) We can use exec for two use cases (as far as I learned today :-P)
+  exec (built-in command) We can use exec for two use cases (as far as I learned today :-P)
 To create independent shell from current shell Usual way:
 $ bash # created a bash shell $ #do whatever you wanted $ exit # will go back to the shell which it created  Using exec:
 $ exec bash #created a bash shell and killed the current shell $ #do whatever you wanted $ exit # will not go back to the shell which it created.
