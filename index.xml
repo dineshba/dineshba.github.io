@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Today I Learnt By Dinesh</title>
+    <title>Today I Learnt</title>
     <link>https://dineshba.github.io/</link>
-    <description>Recent content on Today I Learnt By Dinesh</description>
+    <description>Recent content on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 27 Aug 2019 22:56:45 +0530</lastBuildDate>
@@ -29,8 +29,9 @@ $ exec bash #created a bash shell and killed the current shell $ #do whatever yo
       <pubDate>Mon, 26 Aug 2019 20:05:50 +0530</pubDate>
       
       <guid>https://dineshba.github.io/about/</guid>
-      <description> AboutMe I am a full stack developer. Worked/Working on technologies such as
- Devops  Kubernetes Terraform Docker Helm Vagrant  Mobile  iOS Flutter Android Ionic React Native (Basics)  Web  Angular Angular2 Javascript/es6/typescript React  Backend  Elixir Java Node  CI/CD  GoCD Gitlab Travis   </description>
+      <description>I&amp;rsquo;m a coding freak who is always interested in solving/seeking challenging problems.
+Being in Thoughtworks, I found a lot of opportunities to work in various domains, few of them being - devops tools(docker, kubernetes, terraform, etc), mobile(both iOS and Android), micro services architecture.
+In all experiences on my projects, we have used a ton of open source tools and benefited a lot. After taking a lot from community I felt its only natural to give back as well.</description>
     </item>
     
   </channel>
