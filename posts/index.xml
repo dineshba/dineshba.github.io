@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 31 Aug 2019 00:41:10 +0530</lastBuildDate>
+    <lastBuildDate>Sat, 31 Aug 2019 00:50:33 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Theme of my website</title>
+      <link>https://dineshba.github.io/posts/theme/</link>
+      <pubDate>Sat, 31 Aug 2019 00:50:33 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/theme/</guid>
+      <description>Backbone of my website: I am using hugo to build this website. Thanks to Aswin Karthik for his blog by which I setup this website. Just write markdown files and push, and your website is ready. So cool !!!.
+There are lot of themes available here. After some search, I landed to current theme which is hyde. I really liked the theme and it saved lot of my time. This theme gives lot of options to customize our website.</description>
+    </item>
     
     <item>
       <title>How I am using fzf for every 5 min of my programming life</title>
