@@ -77,6 +77,7 @@ $ exit  # will not go back to the shell which it created.
 
 <pre><code class="language-bash">$ echo 'Hi'        # printed in output stream
 $ echo 'Hi' 1&gt;&amp;2   # printed in error stream (output -&gt; error)
+$ #Note: 1 is output stream, 2 is error stream
 $ exec 2&gt;/dev/null # redirect error stream of current process to null (error -&gt; null)
 $ echo 'Hi' 1&gt;&amp;2   # will not get printed (as output -&gt; error -&gt; null)
 $ exec 1&gt;/dev/null # redirect output stream of current process to null (output -&gt; null)
