@@ -6,10 +6,20 @@
     <description>Recent content on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 31 Aug 2019 00:50:33 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 04 Sep 2019 22:45:25 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>My OSS Journey</title>
+      <link>https://dineshba.github.io/posts/oss/</link>
+      <pubDate>Wed, 04 Sep 2019 22:45:25 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/oss/</guid>
+      <description>I would love to quickly share my OSS Journey. I will keep it very short. I am writing this now (on September 2019), because I gonna celebrate my first anniversary of my OSS journey by this October.
+   Before one year (October 2018) Now (September 2019)     No PRs to any tools/libs 31 PRS (25 Merged, 3 Open, 3 Closed) refer   Know at hight level what the tool is doing Know what internally it is happening (you might get to know which function is getting called :-P)   Okay to live with bugs Raise issue or fix the bug (refer)   Okay to live with existing feature Trying to think what feature is helpful for me (and for others also)   Not attached to any tool/lib Feeling proud about the tool/lib   People from different planet can only contribute No they are just like me   No tools by me Have atleast one tool (gg)   Nothing special about me My resume shines   No cool tshirts Have two tshirts (Hacktoberfest, TW Internal hacktoberfest)     Note: You have to be logged in github to see the above pr and issue links</description>
+    </item>
     
     <item>
       <title>Theme of my website</title>
