@@ -144,7 +144,7 @@ goproject
 
 <h5 id="fzf-way-1">Fzf way:</h5>
 
-<pre><code>alias gcx=&quot;git checkout \$(git branch -a | sed 's/remotes\/origin\///' | grep -v '\*|HEAD' | sort |uniq | fzf --select-1)&quot;
+<pre><code>alias gcx=&quot;git checkout \$(git branch -a | sed -E 's/remotes\/([a-zA-Z-]*\/)//' | grep -v '\*|HEAD' | sort |uniq | fzf --select-1)&quot;
 gcx
 </code></pre>
 
