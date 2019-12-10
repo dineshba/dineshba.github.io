@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Posts &middot; Today I Learnt</title>
+  <title>Resolve_vs_Reach &middot; Today I Learnt</title>
 
   
   <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
@@ -23,7 +23,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://dineshba.github.io/posts/index.xml" rel="alternate" type="application/rss+xml" title="Today I Learnt" />
   
 </head>
 
@@ -49,19 +48,31 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-<li>
-    <span><a href="https://dineshba.github.io/posts/resolve_vs_reach/">Resolve_vs_Reach</a> <time class="pull-right post-list" datetime="2019-12-10T08:46:06&#43;0530">Tue, Dec 10, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/oss/">My OSS Journey</a> <time class="pull-right post-list" datetime="2019-09-04T22:45:25&#43;0530">Wed, Sep 4, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/theme/">Theme of my website</a> <time class="pull-right post-list" datetime="2019-08-31T00:50:33&#43;0530">Sat, Aug 31, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/fzf/">How I am using fzf for every 5 min of my programming life</a> <time class="pull-right post-list" datetime="2019-08-31T00:41:10&#43;0530">Sat, Aug 31, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/exec/">Super cool exec command</a> <time class="pull-right post-list" datetime="2019-08-27T22:56:45&#43;0530">Tue, Aug 27, 2019</time></span>
-  </li>
-</ul>
+    <div class="post">
+  <h1>Resolve_vs_Reach</h1>
+  <time datetime=2019-12-10T08:46:06&#43;0530 class="post-date">Tue, Dec 10, 2019</time>
+  
+
+<p>I have seen lot of people confuse between resolving dns vs reach IP. So this small blog.</p>
+
+<p>Inorder to get data from any computer we need to know the address of the computer which is IP address. Let&rsquo;s say we want to get some data from google and its IP is <code>172.217.31.196</code> (currently). Its very hard to remember this IP and also they can have multiple machines(IPs) which will give the same data (horizontal scaling). So we cannot remember IPs. So we need a map (key: name, value: IP) stored in a server called DNS whose IP is configured automatically (done by DHCP server) when we connect to internet (8.8.8.8 or 1.1.1.1 or your custom dns server).</p>
+
+<p>So when we do <code>www.google.com</code> in browser</p>
+
+<pre><code>1) Check which dns server to use in `/etc/resolve.conf`
+2) Use that dns server to get the `ip address` of www.google.com
+3) Use that IP address to connect and transfer data
+</code></pre>
+
+<p><strong>First two steps</strong> is <code>resolve</code> and <strong>third step</strong> is <code>reach</code>.</p>
+
+<h3 id="example">Example:</h3>
+
+<p>Let&rsquo;s say I want to expose/transfer some data to my colleagues. And my ip is <code>192.168.1.4</code> which is private and will be accessible only to the people whose is in my network. Instead of asking my colleagues to use this IP, we can put an entry in public DNS server (8.8.8.8 or 1.1.1.1). Key is <code>www.dineshba.com</code> and value is <code>192.168.1.4</code>. Once that is done, anybody can <strong>resolve</strong> <code>www.dineshba.com</code> to <code>192.168.1.4</code> as we added entry in public dns server. But it is reachable only to people in my network.</p>
+
+</div>
+
+
     </main>
 
     
