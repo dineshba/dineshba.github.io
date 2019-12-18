@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Posts &middot; Today I Learnt</title>
+  <title>Not all machines are pingable &middot; Today I Learnt</title>
 
   
   <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
@@ -23,7 +23,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://dineshba.github.io/posts/index.xml" rel="alternate" type="application/rss+xml" title="Today I Learnt" />
   
 </head>
 
@@ -49,21 +48,37 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-<li>
-    <span><a href="https://dineshba.github.io/posts/not_all_machines_are_pingable/">Not all machines are pingable</a> <time class="pull-right post-list" datetime="2019-12-12T22:16:35&#43;0530">Thu, Dec 12, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/resolve_vs_reach/">Resolve vs Reach</a> <time class="pull-right post-list" datetime="2019-12-10T08:46:06&#43;0530">Tue, Dec 10, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/oss/">My OSS Journey</a> <time class="pull-right post-list" datetime="2019-09-04T22:45:25&#43;0530">Wed, Sep 4, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/theme/">Theme of my website</a> <time class="pull-right post-list" datetime="2019-08-31T00:50:33&#43;0530">Sat, Aug 31, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/fzf/">How I am using fzf for every 5 min of my programming life</a> <time class="pull-right post-list" datetime="2019-08-31T00:41:10&#43;0530">Sat, Aug 31, 2019</time></span>
-  </li><li>
-    <span><a href="https://dineshba.github.io/posts/exec/">Super cool exec command</a> <time class="pull-right post-list" datetime="2019-08-27T22:56:45&#43;0530">Tue, Aug 27, 2019</time></span>
-  </li>
-</ul>
+    <div class="post">
+  <h1>Not all machines are pingable</h1>
+  <time datetime=2019-12-12T22:16:35&#43;0530 class="post-date">Thu, Dec 12, 2019</time>
+  
+
+<p>To check if a machine(IP) is reachable, I only used <code>ping</code>. If ping is not working, then I will come to a conclusion that <code>IP is not reachable</code>. If you are like me, please read further.</p>
+
+<h4 id="how-ping-works">How Ping works?</h4>
+
+<p>Ping sends the <code>ICMP Echo</code> to the given IP and waits for the <code>ICMP Echo Reply</code>. If we get the <code>Echo Reply</code>, then ICMP server in the given IP is able to send response to our <code>Echo</code> request. We can have timeouts for this roundtrip.</p>
+
+<p>So if we didn&rsquo;t get <code>Echo Reply</code> can we assume that given IP is not reachable. <strong>No, it is not true</strong>.</p>
+
+<h4 id="reasons-for-ping-not-working">Reasons for ping not working:</h4>
+
+<p>1) ping command has been disabled for that network (by the syadmin)
+2) You have no Internet connection/network connectivity
+3) A firewall can filter ICMP Echo messages
+4) IP is not actually reachable</p>
+
+<h4 id="then-how-to-test-the-reachability-of-an-ip">Then, how to test the reachability of an IP</h4>
+
+<p>1) If you know the port,
+    1) <code>curl IP:PORT</code> (hope, get call shouldn&rsquo;t be a problem) (Layer 7)
+    2) <code>telnet IP PORT</code> once connected, we cannot disconnect (Layer 4)
+2) If you don&rsquo;t know the port,
+    1) <code>traceroute IP</code></p>
+
+</div>
+
+
     </main>
 
     
