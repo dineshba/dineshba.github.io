@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.57.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Minikube &middot; Today I Learnt</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Today I Learnt</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2019. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Minikube</h1>
+  <time datetime=2019-12-25T13:10:48&#43;0530 class="post-date">Wed, Dec 25, 2019</time>
+  
+
+<h3 id="which-scheduler-scheduled-the-scheduler-in-minikube">Which scheduler scheduled the scheduler in minikube ?</h3>
+
+<p>In oneliner, minikube is a tool that makes it easy to run Kubernetes locally.</p>
+
+<p>In <code>kube-system</code> namespace, we can result like below,</p>
+
+<pre><code class="language-bash">kubectl get pods -n kube-system
+NAME                                        READY   STATUS    RESTARTS   AGE
+coredns-5c98db65d4-n9vvl                    1/1     Running   1          12m
+coredns-5c98db65d4-p2hk7                    1/1     Running   1          12m
+etcd-minikube                               1/1     Running   0          11m
+kube-addon-manager-minikube                 1/1     Running   0          11m
+kube-apiserver-minikube                     1/1     Running   0          11m
+kube-controller-manager-minikube            1/1     Running   0          11m
+kube-proxy-zkw85                            1/1     Running   0          12m
+kube-scheduler-minikube                     1/1     Running   0          10m
+nginx-ingress-controller-657fd58d97-gp6rl   1/1     Running   0          12m
+</code></pre>
+
+<p>Whenever we create pod(rs/deployments/sts/ds), <code>Scheduler</code> is the one which schedules this pods into any of the available node (in minikube, there is only one).
+In minikube, <code>kube-scheduler-minikube</code> is the one who schedules. For long time, I wondered who scheduled the <code>kube-scheduler-minikube</code> pod to this minikube node. I assumed it as <code>magic</code> 🤪</p>
+
+<p>Now, I understood how things are happening, here you go:</p>
+
+<p>There is something called <a href="https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/">static pods</a> in kubernetes. Without  master components (<code>api-server</code>, <code>etcd</code>, <code>scheduler</code>, <code>controller-manager</code>), we can run pods in <code>kubelet</code> <strong>directly</strong>. Minikube used this to run master components and thus formed the cluster.</p>
+
+<h4 id="proof">Proof:</h4>
+
+<pre><code class="language-bash">$ minikube ssh
+$ ps aux | grep kubelet
+root      3035  3.9  4.6 1377692 91476 ?       Ssl  07:27   0:06 /var/lib/minikube/binaries/v1.15.2/kubelet --authorization-mode=Webhook --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --cgroup-driver=cgroupfs --client-ca-file=/var/lib/minikube/certs/ca.crt --cluster-dns=10.96.0.10 --cluster-domain=cluster.local --config=/var/lib/kubelet/config.yaml --container-runtime=docker --hostname-override=minikube --kubeconfig=/etc/kubernetes/kubelet.conf --node-ip=192.168.99.100 --pod-manifest-path=/etc/kubernetes/manifests
+</code></pre>
+
+<p><code>--pod-manifest-path</code> is path to the directory containing static pod files to run.
+In the above example, kubelet is started with <code>--pod-manifest-path=/etc/kubernetes/manifests</code></p>
+
+<pre><code class="language-bash">$ ls -l /etc/kubernetes/manifests
+-rw-r----- 1 root root 1532 Jan  1  0001 addon-manager.yaml.tmpl
+-rw------- 1 root root 1990 Dec 25 07:27 etcd.yaml
+-rw------- 1 root root 2893 Dec 25 07:27 kube-apiserver.yaml
+-rw------- 1 root root 2262 Dec 25 07:27 kube-controller-manager.yaml
+-rw------- 1 root root  990 Dec 25 07:27 kube-scheduler.yaml
+</code></pre>
+
+<p>Thus when kubelet started, it started the master components.</p>
+
+</div>
+
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>

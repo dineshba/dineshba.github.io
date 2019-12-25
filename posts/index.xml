@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Dec 2019 22:16:35 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 25 Dec 2019 13:10:48 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Minikube</title>
+      <link>https://dineshba.github.io/posts/minikube/</link>
+      <pubDate>Wed, 25 Dec 2019 13:10:48 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/minikube/</guid>
+      <description>Which scheduler scheduled the scheduler in minikube ? In oneliner, minikube is a tool that makes it easy to run Kubernetes locally.
+In kube-system namespace, we can result like below,
+kubectl get pods -n kube-system NAME READY STATUS RESTARTS AGE coredns-5c98db65d4-n9vvl 1/1 Running 1 12m coredns-5c98db65d4-p2hk7 1/1 Running 1 12m etcd-minikube 1/1 Running 0 11m kube-addon-manager-minikube 1/1 Running 0 11m kube-apiserver-minikube 1/1 Running 0 11m kube-controller-manager-minikube 1/1 Running 0 11m kube-proxy-zkw85 1/1 Running 0 12m kube-scheduler-minikube 1/1 Running 0 10m nginx-ingress-controller-657fd58d97-gp6rl 1/1 Running 0 12m  Whenever we create pod(rs/deployments/sts/ds), Scheduler is the one which schedules this pods into any of the available node (in minikube, there is only one).</description>
+    </item>
     
     <item>
       <title>Not all machines are pingable</title>
