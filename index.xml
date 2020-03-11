@@ -6,10 +6,21 @@
     <description>Recent content on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 25 Dec 2019 13:10:48 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 11 Mar 2020 20:12:28 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Fix corrupted Terraform state</title>
+      <link>https://dineshba.github.io/posts/terraform_state/</link>
+      <pubDate>Wed, 11 Mar 2020 20:12:28 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/terraform_state/</guid>
+      <description>Lets say you corrupte your terraform state. There are multiple ways in which you can corrupte it. So I am not gonna tell how we corrupted it.
+In order to fix it, 1) You have to remove unneccassary resources from the state.
+terraform state rm resource.resource_id #eg: terraform state rm google_container_node_pool.node_pool #eg: terraform state rm google_container_cluster.cluster  2) You have to import the actual state into the state file (Make sure import is available for your resource)</description>
+    </item>
     
     <item>
       <title>Which scheduler scheduled the scheduler in minikube ?</title>

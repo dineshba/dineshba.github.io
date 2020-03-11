@@ -44,13 +44,26 @@
       </ul>
     </nav>
 
-    <p>&copy; 2019. All rights reserved. </p>
+    <p>&copy; 2020. All rights reserved. </p>
   </div>
 </aside>
 
     <main class="content container">
     <div class="posts">
 <article class="post">
+  <h1 class="post-title">
+    <a href="https://dineshba.github.io/posts/terraform_state/">Fix corrupted Terraform state</a>
+  </h1>
+  <time datetime="2020-03-11T20:12:28&#43;0530" class="post-date">Wed, Mar 11, 2020</time>
+  Lets say you corrupte your terraform state. There are multiple ways in which you can corrupte it. So I am not gonna tell how we corrupted it.
+In order to fix it, 1) You have to remove unneccassary resources from the state.
+terraform state rm resource.resource_id #eg: terraform state rm google_container_node_pool.node_pool #eg: terraform state rm google_container_cluster.cluster  2) You have to import the actual state into the state file (Make sure import is available for your resource)
+  
+  <div class="read-more-link">
+    <a href="/posts/terraform_state/">Read More…</a>
+  </div>
+  
+</article><article class="post">
   <h1 class="post-title">
     <a href="https://dineshba.github.io/posts/minikube/">Which scheduler scheduled the scheduler in minikube ?</a>
   </h1>

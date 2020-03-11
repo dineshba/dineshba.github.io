@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Tags &middot; Today I Learnt</title>
+  <title>Fix corrupted Terraform state &middot; Today I Learnt</title>
 
   
   <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
@@ -23,7 +23,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://dineshba.github.io/tags/index.xml" rel="alternate" type="application/rss+xml" title="Today I Learnt" />
   
 </head>
 
@@ -49,9 +48,36 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
+    <div class="post">
+  <h1>Fix corrupted Terraform state</h1>
+  <time datetime=2020-03-11T20:12:28&#43;0530 class="post-date">Wed, Mar 11, 2020</time>
+  <p>Lets say you corrupte your terraform state. There are multiple ways in which you
+can corrupte it. So I am not gonna tell how we corrupted it.</p>
 
-</ul>
+<p>In order to fix it,
+1) You have to remove unneccassary resources from the state.</p>
+
+<pre><code class="language-bash">terraform state rm resource.resource_id
+#eg: terraform state rm google_container_node_pool.node_pool
+#eg: terraform state rm google_container_cluster.cluster
+</code></pre>
+
+<p>2) You have to import the actual state into the state file (Make sure import is available for your resource)</p>
+
+<pre><code class="language-bash">terraform import resource.resource_id resource_specification
+#eg: terraform import google_container_node_pool.node_pool &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;/&lt;node-pool-name&gt;
+#eg: terraform import module.gke_cluster.google_container_cluster.cluster &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;
+
+</code></pre>
+
+<blockquote>
+<p>Note: We can manually edit the state file and fix it. You can do that only
+when you have permission to the remote backend(if you are having one) and when you are expert in understanding the state file.</p>
+</blockquote>
+
+</div>
+
+
     </main>
 
     
