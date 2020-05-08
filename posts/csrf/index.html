@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.57.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CSRF and its protection &middot; Today I Learnt</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Today I Learnt</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>CSRF and its protection</h1>
+  <time datetime=2020-05-08T19:27:40&#43;0530 class="post-date">Fri, May 8, 2020</time>
+  
+
+<h4 id="what-is-cookie">What is Cookie ?</h4>
+
+<p>An HTTP cookie (web cookie, browser cookie) is a small piece of data that a <strong>server sends</strong> to the user&rsquo;s web browser. The browser may store it and <strong>send it back</strong> with the next request to the same server. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">source</a></p>
+
+<blockquote>
+<p>Note: It is sent to the server back by the browser <strong>by default</strong></p>
+</blockquote>
+
+<h4 id="cross-site-request-forgery-csrf">Cross-Site Request Forgery (CSRF)</h4>
+
+<p>Lets say you logged into the bank website and the back website uses cookies to store the user authentication details (say sessionId or oauth tokens)</p>
+
+<ul>
+<li>Lets say the attacker sends a mail which contains hidden javascript to send ajax requests to the bank website and the victim opens it</li>
+<li>Lets say the attacker creates a website which will to send ajax requests to the bank website and the victim opens that website</li>
+</ul>
+
+<p>In both these cases, browser will send the valid cookies of the bank website to it and the bank site cannot differentiate between the proper and malicious request.</p>
+
+<h4 id="can-this-attack-be-applied-to-all-kind-of-requests">Can this attack be applied to all kind of requests ?</h4>
+
+<p>Only to the <strong>state chaging</strong> requests which means generally POST/PUT/PATCH</p>
+
+<h5 id="why-it-is-not-applicable-to-read-only-requests">Why it is not applicable to read-only requests ?</h5>
+
+<p>For read only requests, the malicious website will receive the data from the bank site. It cannot do anything with that <have some doubts here></p>
+
+<h4 id="one-of-the-easy-way-to-protect">One of the easy way to protect:</h4>
+
+<h5 id="can-javascript-read-cookies">Can javascript read cookies ?</h5>
+
+<ul>
+<li>For <code>httpOnly=true</code> cookie (httpOnly is one of the property of the cookie), javascript can <strong>never</strong> read the cookie. But the browser can send it to the same server which provided it</li>
+<li>For <code>httpOnly=false</code> cookie, <strong>only javascript running in the same domain can read the cookie</strong>. Eg: cookie of <code>www.myback.com</code> can be read by the javascript running in <code>www.myback.com</code> page.</li>
+</ul>
+
+<p>So we can create a <code>random string</code> from the backend and send to the browser as the <code>httpOnly=false</code> cookie (say, name of the cookie <code>CSRF-TOKEN</code>). We can write javascript to read the cookie and add as <strong>header</strong> to all the <code>state changing</code> requests (say, the header name is <code>X-CSRF-TOKEN</code>).</p>
+
+<p>So our backend will receive two things in the request header.
+    - <code>CSRF-TOKEN</code> sent by browser by default
+    - <code>X-CSRF-TOKEN</code> sent by the javascript running in the bank website pages.</p>
+
+<p><strong>If both are same</strong>, then request is originated from the proper website. Simple 🥳🥳🥳</p>
+
+</div>
+
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>

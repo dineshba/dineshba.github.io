@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://dineshba.github.io/posts/terraform_state/</loc>
-    <lastmod>2020-03-11T20:12:28+05:30</lastmod>
+    <loc>https://dineshba.github.io/posts/csrf/</loc>
+    <lastmod>2020-05-08T19:27:40+05:30</lastmod>
   </url>
   
   <url>
     <loc>https://dineshba.github.io/posts/</loc>
-    <lastmod>2020-03-11T20:12:28+05:30</lastmod>
+    <lastmod>2020-05-08T19:27:40+05:30</lastmod>
   </url>
   
   <url>
     <loc>https://dineshba.github.io/</loc>
+    <lastmod>2020-05-08T19:27:40+05:30</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dineshba.github.io/posts/terraform_state/</loc>
     <lastmod>2020-03-11T20:12:28+05:30</lastmod>
   </url>
   

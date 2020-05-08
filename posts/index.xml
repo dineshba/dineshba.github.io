@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Mar 2020 20:12:28 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 08 May 2020 19:27:40 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CSRF and its protection</title>
+      <link>https://dineshba.github.io/posts/csrf/</link>
+      <pubDate>Fri, 08 May 2020 19:27:40 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/csrf/</guid>
+      <description>What is Cookie ? An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user&amp;rsquo;s web browser. The browser may store it and send it back with the next request to the same server. source
+ Note: It is sent to the server back by the browser by default
+ Cross-Site Request Forgery (CSRF) Lets say you logged into the bank website and the back website uses cookies to store the user authentication details (say sessionId or oauth tokens)</description>
+    </item>
     
     <item>
       <title>Fix corrupted Terraform state</title>
