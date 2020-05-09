@@ -19,7 +19,7 @@
       <guid>https://dineshba.github.io/posts/csrf/</guid>
       <description>What is Cookie ? An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to the user&amp;rsquo;s web browser. The browser may store it and send it back with the next request to the same server. source
  Note: It is sent to the server back by the browser by default
- Cross-Site Request Forgery (CSRF) Lets say you logged into the bank website and the back website uses cookies to store the user authentication details (say sessionId or oauth tokens)</description>
+ Cross-Site Request Forgery (CSRF) Lets say you logged into the bank website and the bank website uses cookies to store the user authentication details (say sessionId or oauth tokens)</description>
     </item>
     
     <item>
