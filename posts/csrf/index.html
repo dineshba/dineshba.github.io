@@ -82,6 +82,20 @@
 
 <h4 id="one-of-the-easy-way-to-protect">One of the easy way to protect:</h4>
 
+<h5 id="simplest-fix">Simplest fix</h5>
+
+<p>Use <code>SameSite=Strict/Lax</code> cookies</p>
+
+<p><em><code>SameSite=Strict</code></em>
+Browsers should only send these cookies with requests originated from the same domain/site as the target domain.</p>
+
+<p><em><code>SameSite=Lax</code></em>
+Cookies are allowed to be sent with top-level navigations and will be sent along with GET request initiated by third party website. This is the default value in modern browsers.</p>
+
+<h5 id="disclaimer">Disclaimer:</h5>
+
+<p>A current limitation of same-site Cookies is that not all modern browsers support them</p>
+
 <h5 id="can-javascript-read-cookies">Can javascript read cookies ?</h5>
 
 <ul>
@@ -96,6 +110,10 @@
     - <code>X-CSRF-TOKEN</code> sent by the javascript running in the bank website pages.</p>
 
 <p><strong>If both are same</strong>, then request is originated from the proper website. Simple 🥳🥳🥳</p>
+
+<h4 id="fact">Fact</h4>
+
+<p>CSRF attacks were at number 5 in the OWASP Top 10 list published in 2010, but they declined to number 8 in the OWASP Top Ten in 2013. People suggested that the reason for this was <strong>increased awareness of CSRF and the common use of Anti-CSRF tokens by frameworks.</strong></p>
 
 </div>
 
