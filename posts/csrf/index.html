@@ -78,7 +78,7 @@
 
 <h5 id="why-it-is-not-applicable-to-read-only-requests">Why it is not applicable to read-only requests ?</h5>
 
-<p>For read only requests, the malicious website will receive the data from the bank site. It cannot do anything with that <have some doubts here></p>
+<p>For read only requests, the malicious website will receive the data from the bank site. It cannot do anything with that.</p>
 
 <h4 id="one-of-the-easy-way-to-protect">One of the easy way to protect:</h4>
 
@@ -102,7 +102,7 @@ Cookies are allowed to be sent with top-level navigations and will be sent along
 
 <ul>
 <li>For <code>httpOnly=true</code> cookie (httpOnly is one of the property of the cookie), javascript can <strong>never</strong> read the cookie. But the browser can send it to the same server which provided it</li>
-<li>For <code>httpOnly=false</code> cookie, <strong>only javascript running in the same domain can read the cookie</strong>. Eg: cookie of <code>www.myback.com</code> can be read by the javascript running in <code>www.myback.com</code> page.</li>
+<li>For <code>httpOnly=false</code> cookie, <strong>only javascript running in the same domain can read the cookie</strong>. Eg: cookie of <code>www.mybank.com</code> can be read by the javascript running in <code>www.mybank.com</code> page.</li>
 </ul>
 
 <p>So we can create a <code>random string</code> from the backend and send to the browser as the <code>httpOnly=false</code> cookie (say, name of the cookie <code>CSRF-TOKEN</code>). We can write javascript to read the cookie and add as <strong>header</strong> to all the <code>state changing</code> requests (say, the header name is <code>X-CSRF-TOKEN</code>).</p>
