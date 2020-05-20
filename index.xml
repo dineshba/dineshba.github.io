@@ -6,10 +6,21 @@
     <description>Recent content on Today I Learnt</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 May 2020 19:27:40 +0530</lastBuildDate>
+    <lastBuildDate>Tue, 19 May 2020 21:31:36 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Openrc</title>
+      <link>https://dineshba.github.io/posts/openrc/</link>
+      <pubDate>Tue, 19 May 2020 21:31:36 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/openrc/</guid>
+      <description>Problem Statement: After doing git push how many of us wanted to see the
+ status of the pipeline new commits in github/gitlab ui new artifacts in the nexus repo wiki page of the git repo  To be generic, you want to open a particular url after an action. How can we achieve it easily ?
+Solution: alias openrc=&amp;quot;cat .openrc | xargs -I{} open {}&amp;quot; # in your .</description>
+    </item>
     
     <item>
       <title>CSRF and its protection</title>
