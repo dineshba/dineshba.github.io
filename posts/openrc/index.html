@@ -82,6 +82,10 @@ So, my <code>.openrc</code> will be like</p>
 http://myjenkins.com/job/my-repo/job/master/
 </code></pre>
 
+<blockquote>
+<p>Note: Url should start with http:// or https:// so that <code>open</code> command opens in default browser.</p>
+</blockquote>
+
 <p>So after pushed, I will do</p>
 
 <pre><code class="language-sh">$ openrc # which opens my jenkins pipeline url for the master branch
@@ -94,6 +98,25 @@ http://myjenkins.com/job/my-repo/job/master/
 </ul>
 
 <p>So started using this <code>alias</code> which makes my life easily.</p>
+
+<h4 id="improvements-in-script-alias">Improvements in script/alias:</h4>
+
+<p>Use grep/<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> instead of cat to remove the empty files</p>
+
+<pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | xargs -I{} open {}&quot;
+$ # or
+$ alias openrc=&quot;rg . .openrc | xargs -I{} open {}&quot;
+</code></pre>
+
+<p>Use <a href="https://github.com/junegunn/fzf">fzf</a> to select from mutilple urls</p>
+
+<pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
+</code></pre>
+
+<ul>
+<li>Auto select if only one url present (&ndash;select-1 flag)</li>
+<li>Select more than one url using <TAB> (-m flag)</li>
+</ul>
 
 </div>
 
