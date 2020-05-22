@@ -101,7 +101,7 @@ http://myjenkins.com/job/my-repo/job/master/
 
 <h4 id="improvements-in-script-alias">Improvements in script/alias:</h4>
 
-<ol>
+<ul>
 <li><p>Use grep/<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> instead of cat to remove the empty files</p>
 
 <pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | xargs -I{} open {}&quot;
@@ -109,20 +109,22 @@ $ # or
 $ alias openrc=&quot;rg . .openrc | xargs -I{} open {}&quot;
 </code></pre></li>
 
-<li><p>Use <a href="https://github.com/junegunn/fzf">fzf</a> to select from mutilple urls</p></li>
+<li><p>Use <a href="https://github.com/junegunn/fzf">fzf</a> to select from mutilple urls</p>
 
-<li><p>Auto select if only one url present (&ndash;select-1 flag)</p></li>
+<ul>
+<li>Auto select if only one url present (&ndash;select-1 flag)</li>
 
 <li><p>Select more than one url using <TAB> (-m flag)</p>
 
 <pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
 </code></pre></li>
+</ul></li>
 
 <li><p>Consider only the valid urls (starts with http(s))</p>
 
 <pre><code class="language-sh">$ alias openrc=&quot;grep ^http .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
 </code></pre></li>
-</ol>
+</ul>
 
 </div>
 
