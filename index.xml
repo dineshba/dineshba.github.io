@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Today I Learnt</title>
+    <title>Dinesh&#39;s Blog</title>
     <link>https://dineshba.github.io/</link>
-    <description>Recent content on Today I Learnt</description>
+    <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 19 May 2020 21:31:36 +0530</lastBuildDate>
@@ -116,6 +116,16 @@ To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd 
 To create independent shell from current shell Usual way:
 $ bash # created a bash shell $ #do whatever you wanted $ exit # will go back to the shell which it created  Using exec:
 $ exec bash #created a bash shell and killed the current shell $ #do whatever you wanted $ exit # will not go back to the shell which it created.</description>
+    </item>
+    
+    <item>
+      <title>My Talks</title>
+      <link>https://dineshba.github.io/talks/</link>
+      <pubDate>Tue, 27 Aug 2019 20:05:50 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/talks/</guid>
+      <description>Recent Top - Power of Hashicorp Vault and it&amp;rsquo;s internal
+ As we are started moving all our infra to cloud,secret management for the applications and also for the developers/infra admin is the challenging task. This talk will discuss about how Vault solves this problem and also lets understand the reasons behind the architecture of vault.   How to orchestrate containers and what are the components needed for it ?</description>
     </item>
     
     <item>
