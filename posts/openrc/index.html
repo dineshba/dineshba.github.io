@@ -124,6 +124,11 @@ $ alias openrc=&quot;rg . .openrc | xargs -I{} open {}&quot;
 
 <pre><code class="language-sh">$ alias openrc=&quot;grep ^http .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
 </code></pre></li>
+
+<li><p>Sometimes, I have to think to between typing <code>openrc or git open</code>. So removing that unnecessary thinking by below thinking 😛. Appending the output of <code>git open</code> to <code>.openrc</code> so that we can always type <code>openrc</code></p>
+
+<pre><code class="language-sh">$ alias openrc=&quot;echo \$(git open -p) | cat .openrc - |rg ^http | fzf --select-1 -m | xargs -I{} open {}&quot;
+</code></pre></li>
 </ul>
 
 </div>
