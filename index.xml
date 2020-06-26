@@ -6,10 +6,22 @@
     <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 20 Jun 2020 22:58:45 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 26 Jun 2020 15:38:55 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gitfetcher</title>
+      <link>https://dineshba.github.io/posts/gitfetcher/</link>
+      <pubDate>Fri, 26 Jun 2020 15:38:55 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/gitfetcher/</guid>
+      <description>Why I will not do git fetch or git pull ? Because I have automated it.
+Highly inspired from bash-git-prompt. If you are already using it (or equivalent of it), below custom script may be useful to you.
+Problem Statement: 1) Whenever I jump into the git directory, I do git pull 2) And sometimes I forget to do it which might create conflicts
+So created a script, which will do git fetch - whenever I jump into git directory - if we havent fetched for some time (say 5 min)</description>
+    </item>
     
     <item>
       <title>There are no users in Kubernetes</title>
