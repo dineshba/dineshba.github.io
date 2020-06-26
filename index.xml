@@ -20,7 +20,7 @@
       <description>Where is user information stored in kubernetes ? Kubernetes will not store the user details.
 Then how kubernetes is able to do the Authentication ?  Using CA certificates
  We can configure to use CA authority Create CA certificates with user name and sign it with kubernetes  Using external systems
-  How kubernetes components are talking securely ?  Using CA certificates  If you running in minikube or using kubeadm, you see the volume mount of cert files to the pods in kube-system namespace.</description>
+ As it is deligating this authentication to external systems, we can easily onboard users into the kubernetes.</description>
     </item>
     
     <item>
