@@ -72,40 +72,77 @@
 
 <p><img src="/auth.png" alt="auth.png" /></p>
 
-<p>How kubernetes components are talking securely ?
-- Using CA certificates
-    - If you running in minikube or using kubeadm, you see the volume mount of cert files to the pods in kube-system namespace.
-        - Eg: scheduler pod will have scheduler.conf file mounted</p>
+<h4 id="how-kubernetes-components-are-talking-securely">How kubernetes components are talking securely ?</h4>
 
-<p>Can we share this config file to everybody?
-- We can definitely share. Anybody with CA certificate can talk to kubernetes and get authenticated
-- But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</p>
+<ul>
+<li>Using CA certificates
 
-<p>Can we use CA method to authenticate machines to talk to kubernetes ?
-- Yes we can do it
-- But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</p>
+<ul>
+<li>If you running in minikube or using kubeadm, you see the volume mount of cert files to the pods in kube-system namespace.
 
-<p>Then how we can give permission for machine/process/bot to talk to kubernetes ?
-- We have another type of special user called <code>ServiceAccount</code>
-    - This serviceAccount will be stored in kubernetes (etcd)
-    - We can easily create serviceAccount <code>kubectl create sa &lt;sa-name&gt;</code>
-    - It will automatically create a secret (jwt token), using this token we can talk to kubernetes
-<img src="/sa.png" alt="sa.png" /></p>
+<ul>
+<li>Eg: scheduler pod will have scheduler.conf file mounted</li>
+</ul></li>
+</ul></li>
+</ul>
 
-<p>How authorization is happening in kubernetes ?
-- Using RBAC
-    - This information will be stored inside the kubernetes(etcd) as kubernetes objects
-    - There are 4 objects available
-        - Role (Resources + permission)
-            - eg: resource = pod, permission = list,get
-        - RoleBinding (Role + User)
-            - eg: readonlyRole + dinesh or readonlyRole + sa
-            - rolebinding can be for a user or for a service account
-        - ClusterRole (Same as Role but for all namespaces)
-        - ClusterRoleBinding (Same as Role but for all namespaces)</p>
+<h4 id="can-we-share-this-config-file-to-everybody">Can we share this config file to everybody?</h4>
 
-<p>Eg:
-Create a role to get,list,watch pods</p>
+<ul>
+<li>We can definitely share. Anybody with CA certificate can talk to kubernetes and get authenticated</li>
+<li>But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</li>
+</ul>
+
+<h4 id="can-we-use-ca-method-to-authenticate-machines-to-talk-to-kubernetes">Can we use CA method to authenticate machines to talk to kubernetes ?</h4>
+
+<ul>
+<li>Yes we can do it</li>
+<li>But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</li>
+</ul>
+
+<h4 id="then-how-we-can-give-permission-for-machine-process-bot-to-talk-to-kubernetes">Then how we can give permission for machine/process/bot to talk to kubernetes ?</h4>
+
+<ul>
+<li>We have another type of special user called <code>ServiceAccount</code>
+
+<ul>
+<li>This serviceAccount will be stored in kubernetes (etcd)</li>
+<li>We can easily create serviceAccount <code>kubectl create sa &lt;sa-name&gt;</code></li>
+<li>It will automatically create a secret (jwt token), using this token we can talk to kubernetes
+<img src="/sa.png" alt="sa.png" /></li>
+</ul></li>
+</ul>
+
+<h4 id="how-authorization-is-happening-in-kubernetes">How authorization is happening in kubernetes ?</h4>
+
+<ul>
+<li>Using RBAC
+
+<ul>
+<li>This information will be stored inside the kubernetes(etcd) as kubernetes objects</li>
+<li>There are 4 objects available
+
+<ul>
+<li>Role (Resources + permission)
+
+<ul>
+<li>eg: resource = pod, permission = list,get</li>
+</ul></li>
+<li>RoleBinding (Role + User)
+
+<ul>
+<li>eg: readonlyRole + dinesh or readonlyRole + sa</li>
+<li>rolebinding can be for a user or for a service account</li>
+</ul></li>
+<li>ClusterRole (Same as Role but for all namespaces)</li>
+<li>ClusterRoleBinding (Same as Role but for all namespaces)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h5 id="eg">Eg:</h5>
+
+<p>Create a role to get,list,watch pods</p>
 
 <pre><code>cat &lt;&lt;EOF | kubectl apply -f -
 ---
