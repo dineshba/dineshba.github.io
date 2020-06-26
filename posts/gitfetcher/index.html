@@ -59,48 +59,55 @@
 
 <p>Highly inspired from <a href="https://github.com/magicmonty/bash-git-prompt">bash-git-prompt</a>. If you are already using it (or equivalent of it), below custom script may be useful to you.</p>
 
-<p><strong>Problem Statement:</strong>
-1) Whenever I jump into the git directory, I do <code>git pull</code>
-2) And sometimes I forget to do it which might create conflicts</p>
+<p><strong>Problem Statement:</strong></p>
 
-<p>So created a script, which will do <code>git fetch</code>
-- whenever I jump into git directory
-- if we havent fetched for some time (say 5 min)</p>
+<ul>
+<li>Whenever I jump into the git directory, I do <code>git pull</code></li>
+<li>And sometimes I forget to do it which might create conflicts</li>
+</ul>
+
+<p>So created a script, which will do <code>git fetch</code></p>
+
+<ul>
+<li>whenever I jump into git directory</li>
+
+<li><p>if we havent fetched for some time (say 5 min)</p>
 
 <pre><code class="language-bash">$ cat /path/to/gitfetcher.sh
 #!/usr/bin/env bash
 
 function fetch_in_background() {
-  {
-    eval &quot;git fetch --quiet&quot; &amp;&gt; /dev/null
-  }&amp;
+{
+eval &quot;git fetch --quiet&quot; &amp;&gt; /dev/null
+}&amp;
 }
 
 GIT_REPO=&quot;$PWD/.git&quot;
 if [[ -e $GIT_REPO ]]; then
-  FETCH_HEAD=&quot;$GIT_REPO/FETCH_HEAD&quot;
-  if [[ -e &quot;${FETCH_HEAD}&quot; ]]; then
+FETCH_HEAD=&quot;$GIT_REPO/FETCH_HEAD&quot;
+if [[ -e &quot;${FETCH_HEAD}&quot; ]]; then
     
-    FETCH_TIMEOUT=5 #minutes after which check again
+FETCH_TIMEOUT=5 #minutes after which check again
     
-    perl -e '((time - (stat(&quot;'&quot;${FETCH_HEAD}&quot;'&quot;))[9]) / 60) &gt; '&quot;${FETCH_TIMEOUT}&quot;' &amp;&amp; exit(0) || exit(1)'
-    x=&quot;$?&quot;
-    if [[ $x == 0 ]]; then
-      if [[ -n $(git remote show) ]]; then
-        (
-          fetch_in_background
-          disown -h
-        )
-      fi
-    fi
-  else 
-    # echo &quot;.git/FETCH_HEAD not found&quot;
-    fetch_in_background
-    disown -h
+perl -e '((time - (stat(&quot;'&quot;${FETCH_HEAD}&quot;'&quot;))[9]) / 60) &gt; '&quot;${FETCH_TIMEOUT}&quot;' &amp;&amp; exit(0) || exit(1)'
+x=&quot;$?&quot;
+if [[ $x == 0 ]]; then
+  if [[ -n $(git remote show) ]]; then
+    (
+      fetch_in_background
+      disown -h
+    )
   fi
 fi
+else 
+# echo &quot;.git/FETCH_HEAD not found&quot;
+fetch_in_background
+disown -h
+fi
+fi
 
-</code></pre>
+</code></pre></li>
+</ul>
 
 <p>And include the above script as <code>prompter</code> in your bash/zsh/fish configfile like</p>
 

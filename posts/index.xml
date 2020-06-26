@@ -19,8 +19,8 @@
       <guid>https://dineshba.github.io/posts/gitfetcher/</guid>
       <description>Why I will not do git fetch or git pull ? Because I have automated it.
 Highly inspired from bash-git-prompt. If you are already using it (or equivalent of it), below custom script may be useful to you.
-Problem Statement: 1) Whenever I jump into the git directory, I do git pull 2) And sometimes I forget to do it which might create conflicts
-So created a script, which will do git fetch - whenever I jump into git directory - if we havent fetched for some time (say 5 min)</description>
+Problem Statement:
+ Whenever I jump into the git directory, I do git pull And sometimes I forget to do it which might create conflicts  So created a script, which will do git fetch</description>
     </item>
     
     <item>
