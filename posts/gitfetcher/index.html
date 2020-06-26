@@ -73,7 +73,7 @@
 
 <li><p>if we havent fetched for some time (say 5 min)</p>
 
-<pre><code class="language-bash">$ cat /path/to/gitfetcher.sh
+<pre><code class="language-sh">$ cat /path/to/gitfetcher.sh
 #!/usr/bin/env bash
 
 function fetch_in_background() {
@@ -111,7 +111,7 @@ fi
 
 <p>And include the above script as <code>prompter</code> in your bash/zsh/fish configfile like</p>
 
-<pre><code class="language-bash">### Fetch in background
+<pre><code class="language-sh">### Fetch in background
 export PATH=&quot;$PATH:path/to/gitfetcher.sh&quot; # configure the path
 export PROMPT_COMMAND=&quot;gitfetcher.sh; $PROMPT_COMMAND&quot;
 ### Fetch in background
