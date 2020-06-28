@@ -60,15 +60,19 @@
 <h4 id="then-how-kubernetes-is-able-to-do-the-authentication">Then how kubernetes is able to do the Authentication ?</h4>
 
 <ul>
-<li><p>Using CA certificates</p>
+<li>Using CA certificates
 
 <ul>
 <li>We can configure to use CA authority</li>
 <li>Create CA certificates with user name and sign it with kubernetes</li>
 <li>CA certificate will have the user data (not the kubernetes). Kubernetes will only validate the certificate.</li>
 </ul></li>
+</ul>
 
-<li><p>Using external systems</p>
+<p><img src="/ca.png" alt="ca.png" /></p>
+
+<ul>
+<li>Using external systems
 
 <ul>
 <li>As it is deligating this authentication to external systems, we can <strong>easily onboard users into the kubernetes</strong>. Eg: Lets say your organization have Okta based SSO, then you can easily integrate that to kubernetes and onboard all employees to kubernetes</li>
@@ -102,7 +106,7 @@
 
 <ul>
 <li>Yes we can do it</li>
-<li>But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</li>
+<li>Same as discussed above. Difficult to invalidate the certificate.</li>
 </ul>
 
 <h4 id="then-how-we-can-give-permission-for-machine-process-bot-to-talk-to-kubernetes">Then how we can give permission for machine/process/bot to talk to kubernetes ?</h4>
