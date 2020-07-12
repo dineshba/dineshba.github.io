@@ -6,10 +6,21 @@
     <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Jun 2020 15:38:55 +0530</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jul 2020 13:32:13 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Terminal: History Matters</title>
+      <link>https://dineshba.github.io/posts/history/</link>
+      <pubDate>Sun, 12 Jul 2020 13:32:13 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/history/</guid>
+      <description>For more productive, it is better to reuse the commands in history. In order to do that - Save more history - Optimize the history - Able to find and reuse history easily
+Save more history # bashrc/zshrc/etc #### increase history size export HISTSIZE=1000000 export HISTFILESIZE=1000000 ####   Note: You can specify how big you want
+ Optimize the history  Remove the duplicates in the histroy file Keeps the last entry when there is a duplicate (to maintain the order)  I wrote a simple scirpt in nim programming language for the bash_history file.</description>
+    </item>
     
     <item>
       <title>Gitfetcher</title>
