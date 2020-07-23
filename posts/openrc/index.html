@@ -68,8 +68,25 @@
 
 <h4 id="solution">Solution:</h4>
 
-<pre><code class="language-sh">alias openrc=&quot;cat .openrc | xargs -I{} open {}&quot; # in your .bashrc/.zshrc file
+<p>Put this openrc file in the path (so that we can invoke this from anywhere) Eg: <code>/usr/local/bin/openrc</code></p>
+
+<pre><code class="language-sh">$ cat /usr/local/bin/openrc
+#!/usr/bin/env bash
+
+gitUrl=$(git open -p)
+fileContent=$gitUrl
+file=&quot;.openrc&quot;
+if [ -f &quot;$file&quot; ]
+then
+	echo $gitUrl | cat $file - |rg ^http | fzf --select-1 -m | xargs -I{} open {}
+else
+    open $gitUrl
+fi
 </code></pre>
+
+<blockquote>
+<p>Note: Above script depends on <a href="https://github.com/paulirish/git-open">git-open</a></p>
+</blockquote>
 
 <p>Have a file <code>.openrc</code> with list of urls in your repo directory.</p>
 
@@ -91,17 +108,22 @@ http://myjenkins.com/job/my-repo/job/master/
 <pre><code class="language-sh">$ openrc # which opens my jenkins pipeline url for the master branch
 </code></pre>
 
-<h4 id="why-not-git-open-https-github-com-paulirish-git-open">Why not <a href="https://github.com/paulirish/git-open">git-open</a> ?</h4>
+<h4 id="why-not-plain-git-open-https-github-com-paulirish-git-open">Why not plain <a href="https://github.com/paulirish/git-open">git-open</a> ?</h4>
 
 <ul>
 <li>I used it a lot when my pipelines were in Gitlab. When we are having pipelines in different url other than git url, git-open is not very useful.</li>
 </ul>
 
-<p>So started using this <code>alias</code> which makes my life easily.</p>
+<p>So started using this <code>script</code> which makes my life easily.</p>
 
-<h4 id="improvements-in-script-alias">Improvements in script/alias:</h4>
+<h4 id="how-the-script-evolved-of-the-script-alias">How the script evolved of the script/alias:</h4>
 
 <ul>
+<li><p>Initial version:</p>
+
+<pre><code class="language-sh">alias openrc=&quot;cat .openrc | xargs -I{} open {}&quot;
+</code></pre></li>
+
 <li><p>Use grep/<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> instead of cat to remove the empty files</p>
 
 <pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | xargs -I{} open {}&quot;
@@ -130,6 +152,8 @@ $ alias openrc=&quot;rg . .openrc | xargs -I{} open {}&quot;
 <pre><code class="language-sh">$ alias openrc=&quot;echo \$(git open -p) | cat .openrc - |rg ^http | fzf --select-1 -m | xargs -I{} open {}&quot;
 </code></pre></li>
 </ul>
+
+<p>Note: The above script will print the error message if the <code>.openrc</code> file is not found. But still it will open the git url in the repo. To fix this, I moved from alias to script.</p>
 
 </div>
 

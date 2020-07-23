@@ -96,7 +96,7 @@ Then how kubernetes is able to do the Authentication ?  Using CA certificates  W
   <time datetime="2020-05-19T21:31:36&#43;0530" class="post-date">Tue, May 19, 2020</time>
   Problem Statement: After doing git push how many of us wanted to see the
  status of the pipeline new commits in github/gitlab ui new artifacts in the nexus repo wiki page of the git repo  To be generic, you want to open a particular url after an action. How can we achieve it easily ?
-Solution: alias openrc=&quot;cat .openrc | xargs -I{} open {}&quot; # in your .
+Solution: Put this openrc file in the path (so that we can invoke this from anywhere) Eg: /usr/local/bin/openrc
   
   <div class="read-more-link">
     <a href="/posts/openrc/">Read More…</a>
