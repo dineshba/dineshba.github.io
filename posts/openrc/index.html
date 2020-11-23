@@ -68,7 +68,11 @@
 
 <h4 id="solution">Solution:</h4>
 
-<p>Put this openrc file in the path (so that we can invoke this from anywhere) Eg: <code>/usr/local/bin/openrc</code></p>
+<p>Put this openrc script file in the path (so that we can invoke this from anywhere) Eg: <code>/usr/local/bin/openrc</code></p>
+
+<blockquote>
+<p>Note: Below script depends on <a href="https://github.com/paulirish/git-open">git-open</a>, <a href="https://github.com/junegunn/fzf">fzf</a>, <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> (replace rg with grep if you want)</p>
+</blockquote>
 
 <pre><code class="language-sh">$ cat /usr/local/bin/openrc
 #!/usr/bin/env bash
@@ -83,10 +87,6 @@ else
     open $gitUrl
 fi
 </code></pre>
-
-<blockquote>
-<p>Note: Above script depends on <a href="https://github.com/paulirish/git-open">git-open</a>, <a href="https://github.com/junegunn/fzf">fzf</a>, <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> (replace rg with grep if you want)</p>
-</blockquote>
 
 <p>Have a file <code>.openrc</code> with list of urls in your repo directory.</p>
 
@@ -118,7 +118,7 @@ http://myjenkins.com/job/my-repo/job/master/
 
 <p>So started using this <code>script</code> which makes my life easily.</p>
 
-<h4 id="how-the-script-evolved-of-the-script-alias">How the script evolved of the script/alias:</h4>
+<h4 id="how-the-script-evolved">How the script evolved:</h4>
 
 <ul>
 <li><p>Initial version:</p>
