@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.57.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Access management for git at scale &middot; Dinesh&#39;s Blog</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Dinesh&#39;s Blog</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="/talks"> My Talks </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Access management for git at scale</h1>
+  <time datetime=2020-12-18T17:49:40&#43;0530 class="post-date">Fri, Dec 18, 2020</time>
+  
+
+<p>In order to manage multiple users in a github organization, <strong>it is best to create multiple teams with different access and add users to the necessary teams</strong>.</p>
+
+<pre><code class="language-yaml">Example:
+  OrgName: example
+  Teams: # each team will have different repo access
+  - frontend
+  - backend
+  - devops 
+  Members:
+  - name: dineshba
+    teams: devops, backend
+  - name: another-dev
+    teams: frontend
+  - name: some-tech-lead
+    teams: frontend, backend,devops
+</code></pre>
+
+<p>Hope the above yaml explains the concept of <strong>organization, teams and team-memberships</strong> at high level</p>
+
+<p>So the steps will be:
+1. Add user to the organization (1 time per user)
+2. Create a team if needed or reuse the team (only 1 time)
+3. Give repo access to newly created team (only 1 time)
+4. Add user to the team (1 time per user)</p>
+
+<p>So, number of steps for 10 users will be 10 + 1 + 1 + 10.</p>
+
+<p>To be generic, <code>2 + 2n</code> steps</p>
+
+<h4 id="at-scale">At Scale:</h4>
+
+<ul>
+<li>How easy it is to add around 100 users to your github organization and manage easily ?
+
+<ul>
+<li>Read further if you think it is not easy</li>
+<li>Read further if you think it is super boring and repeating task</li>
+<li>Read further if you will be tired of clicking mouse buttons again and again</li>
+</ul></li>
+<li>How long will it take it do ?
+
+<ul>
+<li>Read further if you think it will take around 50min (Assume: 2 users can be added in 1 min)</li>
+<li>Read further if you think the automation will work but writing automation may take more time than adding manually</li>
+</ul></li>
+</ul>
+
+<p>We had an usecase, where we have to add more than 100 users to group of repos in our github organization immediately and also add users in future on demand basis.</p>
+
+<p>So we created a automation to do this for us using <strong>terraform</strong> (yes, terraform is not only for infra management, we can do lot more with terraform). And it took less than 50 min (but this blog took more than 50 min 🤪)</p>
+
+<p>Lets talk using terraform. Even if you dont know about terraform, you should be able to understand things a high level.</p>
+
+<ol>
+<li><p>Declare the <a href="https://www.terraform.io/docs/providers/github/">github terraform provider</a></p>
+
+<pre><code class="language-tf">provider &quot;github&quot; {
+token        = var.github_token
+organization = var.github_organization
+}
+</code></pre></li>
+</ol>
+
+<p>with this, terraform knows how to interact with github apis.</p>
+
+<ol>
+<li><p>Specify the version</p>
+
+<pre><code class="language-tf">terraform {
+required_version = &quot;&gt;=0.12.6&quot;
+required_providers {
+github = &quot;~&gt; 2.9.2&quot;
+}
+}
+</code></pre></li>
+</ol>
+
+<blockquote>
+<p>Note: Please use the latest version if you copying from here</p>
+</blockquote>
+
+<ol>
+<li><p>Define list of variables</p>
+
+<pre><code class="language-tf">variable &quot;github_token&quot; { # var used in step 1
+type = string
+}
+
+variable &quot;github_organization&quot; { # var used in step 1
+type    = string
+default = &quot;some-org&quot;
+}
+
+variable &quot;github_members&quot; { # var used in step 4 and 7
+type = list(string)
+
+default = [&quot;dineshba&quot;]
+}
+</code></pre></li>
+
+<li><p>Invite user to your organization</p>
+
+<pre><code class="language-tf">resource &quot;github_membership&quot; &quot;membership_for_users&quot; {
+for_each = toset(var.github_members)
+username = each.key
+role     = &quot;member&quot;
+}
+</code></pre></li>
+</ol>
+
+<blockquote>
+<p>Note: organization name and token to interact with github apis is given in step 1</p>
+</blockquote>
+
+<p>If we run terraform plan and apply with above content, terraform will invite <code>dineshba</code> to join <code>some-org</code> github organisation</p>
+
+<ol>
+<li><p>Use a team in your organization if it is already present</p>
+
+<pre><code class="language-tf"># use data-block to read team information, as team is already present
+data &quot;github_team&quot; &quot;some_team&quot; { 
+slug = &quot;some-team&quot;
+}
+</code></pre></li>
+
+<li><p>Create a team if you want to create some-team for this use-case</p>
+
+<pre><code class="language-tf"># use this resource-block to create/update team as team is already not present
+resource &quot;github_team&quot; &quot;some_team&quot; { 
+name        = &quot;some-team&quot;
+description = &quot;Some cool team&quot;
+privacy     = &quot;closed&quot;
+}
+
+# provide necessary repository access to the team
+resource &quot;github_team_repository&quot; &quot;some_team_repo&quot; {
+team_id    = &quot;${github_team.some_team.id}&quot;
+repository = &quot;some-repo&quot;
+permission = &quot;pull&quot;
+}
+</code></pre></li>
+</ol>
+
+<p>If we run terraform plan and apply with above content, terraform will create a team called <code>some-team</code> and provide pull access to this team members for the repo <code>some-repo</code></p>
+
+<ol>
+<li><p>Add newly added person to this team</p>
+
+<pre><code class="language-tf">resource &quot;github_team_membership&quot; &quot;some_team_team_membership&quot; {
+for_each = toset(var.github_members)
+team_id  = data.github_team.some_team.id  # use resource instead of data if you are following step 6
+username = each.key
+role     = &quot;member&quot;
+}
+</code></pre></li>
+
+<li><p>Thats all, do
+&gt; Create github token and provide to terraform, so that terraform can do things on our behalf</p>
+
+<pre><code class="language-sh">export TF_VAR_github_token=&lt;your-personal-github-token-created-in-UI&gt;
+</code></pre>
+
+<p>Run terraform</p>
+
+<pre><code class="language-sh">terraform init
+terraform plan
+terraform apply
+</code></pre></li>
+
+<li><p>Add this steps to CI/CD to make things much more simple. I am not covering this as part of this blog</p></li>
+</ol>
+
+<p>Please try and share your feedbacks below</p>
+
+</div>
+
+<h2>Comments</h2>
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-dineshba-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>

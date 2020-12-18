@@ -6,10 +6,20 @@
     <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Jul 2020 13:32:13 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 18 Dec 2020 17:49:40 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Access management for git at scale</title>
+      <link>https://dineshba.github.io/posts/git-access-management/</link>
+      <pubDate>Fri, 18 Dec 2020 17:49:40 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/git-access-management/</guid>
+      <description>In order to manage multiple users in a github organization, it is best to create multiple teams with different access and add users to the necessary teams.
+Example: OrgName: example Teams: # each team will have different repo access - frontend - backend - devops Members: - name: dineshba teams: devops, backend - name: another-dev teams: frontend - name: some-tech-lead teams: frontend, backend,devops  Hope the above yaml explains the concept of organization, teams and team-memberships at high level</description>
+    </item>
     
     <item>
       <title>Terminal: History Matters</title>
