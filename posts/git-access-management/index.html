@@ -109,7 +109,7 @@
 
 <p>Lets talk using terraform. Even if you dont know about terraform, you should be able to understand things a high level.</p>
 
-<ol>
+<ul>
 <li><p>Declare the <a href="https://www.terraform.io/docs/providers/github/">github terraform provider</a></p>
 
 <pre><code class="language-tf">provider &quot;github&quot; {
@@ -117,11 +117,11 @@ token        = var.github_token
 organization = var.github_organization
 }
 </code></pre></li>
-</ol>
+</ul>
 
 <p>with this, terraform knows how to interact with github apis.</p>
 
-<ol>
+<ul>
 <li><p>Specify the version</p>
 
 <pre><code class="language-tf">terraform {
@@ -131,25 +131,25 @@ github = &quot;~&gt; 2.9.2&quot;
 }
 }
 </code></pre></li>
-</ol>
+</ul>
 
 <blockquote>
 <p>Note: Please use the latest version if you copying from here</p>
 </blockquote>
 
-<ol>
+<ul>
 <li><p>Define list of variables</p>
 
-<pre><code class="language-tf">variable &quot;github_token&quot; { # var used in step 1
+<pre><code class="language-tf">variable &quot;github_token&quot; { # var used in first step
 type = string
 }
 
-variable &quot;github_organization&quot; { # var used in step 1
+variable &quot;github_organization&quot; { # var used in first step
 type    = string
 default = &quot;some-org&quot;
 }
 
-variable &quot;github_members&quot; { # var used in step 4 and 7
+variable &quot;github_members&quot; { # var used in next steps
 type = list(string)
 
 default = [&quot;dineshba&quot;]
@@ -164,15 +164,15 @@ username = each.key
 role     = &quot;member&quot;
 }
 </code></pre></li>
-</ol>
+</ul>
 
 <blockquote>
-<p>Note: organization name and token to interact with github apis is given in step 1</p>
+<p>Note: organization name and token to interact with github apis is given in first step</p>
 </blockquote>
 
 <p>If we run terraform plan and apply with above content, terraform will invite <code>dineshba</code> to join <code>some-org</code> github organisation</p>
 
-<ol>
+<ul>
 <li><p>Use a team in your organization if it is already present</p>
 
 <pre><code class="language-tf"># use data-block to read team information, as team is already present
@@ -197,16 +197,16 @@ repository = &quot;some-repo&quot;
 permission = &quot;pull&quot;
 }
 </code></pre></li>
-</ol>
+</ul>
 
 <p>If we run terraform plan and apply with above content, terraform will create a team called <code>some-team</code> and provide pull access to this team members for the repo <code>some-repo</code></p>
 
-<ol>
+<ul>
 <li><p>Add newly added person to this team</p>
 
 <pre><code class="language-tf">resource &quot;github_team_membership&quot; &quot;some_team_team_membership&quot; {
 for_each = toset(var.github_members)
-team_id  = data.github_team.some_team.id  # use resource instead of data if you are following step 6
+team_id  = data.github_team.some_team.id  # use resource instead of data if team is created by terraform
 username = each.key
 role     = &quot;member&quot;
 }
@@ -226,7 +226,7 @@ terraform apply
 </code></pre></li>
 
 <li><p>Add this steps to CI/CD to make things much more simple. I am not covering this as part of this blog</p></li>
-</ol>
+</ul>
 
 <p>Please try and share your feedbacks below</p>
 
