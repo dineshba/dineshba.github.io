@@ -6,10 +6,21 @@
     <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 17:49:40 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 21 Jul 2021 08:05:15 +0530</lastBuildDate>
     
 	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Github actions with Manual Approval Jobs</title>
+      <link>https://dineshba.github.io/posts/github-actions-approval/</link>
+      <pubDate>Wed, 21 Jul 2021 08:05:15 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/github-actions-approval/</guid>
+      <description>Lets say we use terraform and github actions for ci/cd.
+We will have plan and apply steps like below
+name: &#39;Terraform&#39; on: [push, pull_request] jobs: check_lint: #.... check_vulnerability: needs: check_lint #... plan_and_apply: name: &#39;Plan and Apply&#39; runs-on: ubuntu-latest needs: check_vulnerability steps: - name: Checkout uses: actions/checkout@v2 - name: Setup Terraform uses: hashicorp/setup-terraform@v1 - name: Terraform Init run: terraform init - name: Terraform Plan run: terraform plan - name: Terraform Apply run: terraform apply -auto-approve  How to make it approval based ?</description>
+    </item>
     
     <item>
       <title>Access management for github at scale</title>
