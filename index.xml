@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dinesh&#39;s Blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Jul 2021 08:05:15 +0530</lastBuildDate>
-    
-	<atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 21 Jul 2021 08:05:15 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Github actions with Manual Approval Jobs</title>
       <link>https://dineshba.github.io/posts/github-actions-approval/</link>
@@ -19,7 +15,7 @@
       <guid>https://dineshba.github.io/posts/github-actions-approval/</guid>
       <description>Lets say we use terraform and github actions for ci/cd.
 We will have plan and apply steps like below
-name: &#39;Terraform&#39; on: [push, pull_request] jobs: check_lint: #.... check_vulnerability: needs: check_lint #... plan_and_apply: name: &#39;Plan and Apply&#39; runs-on: ubuntu-latest needs: check_vulnerability steps: - name: Checkout uses: actions/checkout@v2 - name: Setup Terraform uses: hashicorp/setup-terraform@v1 - name: Terraform Init run: terraform init - name: Terraform Plan run: terraform plan - name: Terraform Apply run: terraform apply -auto-approve  How to make it approval based ?</description>
+name: &amp;#39;Terraform&amp;#39; on: [push, pull_request] jobs: check_lint: #.... check_vulnerability: needs: check_lint #... plan_and_apply: name: &amp;#39;Plan and Apply&amp;#39; runs-on: ubuntu-latest needs: check_vulnerability steps: - name: Checkout uses: actions/checkout@v2 - name: Setup Terraform uses: hashicorp/setup-terraform@v1 - name: Terraform Init run: terraform init - name: Terraform Plan run: terraform plan - name: Terraform Apply run: terraform apply -auto-approve  How to make it approval based ?</description>
     </item>
     
     <item>
@@ -29,7 +25,7 @@ name: &#39;Terraform&#39; on: [push, pull_request] jobs: check_lint: #.... check
       
       <guid>https://dineshba.github.io/posts/git-access-management/</guid>
       <description>In order to manage multiple users in a github organization, it is best to create multiple teams with different access and add users to the necessary teams.
-Example: OrgName: example Teams: # each team will have different repo access - frontend - backend - devops Members: - name: dineshba teams: devops, backend - name: another-dev teams: frontend - name: some-tech-lead teams: frontend, backend,devops  Hope the above yaml explains the concept of organization, teams and team-memberships at high level</description>
+Example: OrgName: example Teams: # each team will have different repo access - frontend - backend - devops  Members: - name: dineshba teams: devops, backend - name: another-dev teams: frontend - name: some-tech-lead teams: frontend, backend,devops Hope the above yaml explains the concept of organization, teams and team-memberships at high level</description>
     </item>
     
     <item>
@@ -39,7 +35,7 @@ Example: OrgName: example Teams: # each team will have different repo access - f
       
       <guid>https://dineshba.github.io/posts/history/</guid>
       <description>For more productive, it is better to reuse the commands in history. In order to do that
- Save more history Optimize the history Able to find and reuse history easily  Save more history # bashrc/zshrc/etc #### increase history size export HISTSIZE=1000000 export HISTFILESIZE=1000000 ####   Note: You can specify how big you want
+ Save more history Optimize the history Able to find and reuse history easily  Save more history # bashrc/zshrc/etc #### increase history size export HISTSIZE=1000000 export HISTFILESIZE=1000000 ####  Note: You can specify how big you want
  Optimize the history  Remove the duplicates in the histroy file Keeps the last entry when there is a duplicate (to maintain the order)  I wrote a simple scirpt in nim programming language for the bash_history file.</description>
     </item>
     
@@ -62,7 +58,7 @@ Problem Statement:
       
       <guid>https://dineshba.github.io/posts/kubernetesusers/</guid>
       <description>Where is user information stored in kubernetes ? Kubernetes will not store the user details.
-Then how kubernetes is able to do the Authentication ?  Using CA certificates  We can configure to use CA authority Create CA certificates with user name and sign it with kubernetes CA certificate will have the user data (not the kubernetes). Kubernetes will only validate the certificate.    Using external systems  As it is deligating this authentication to external systems, we can easily onboard users into the kubernetes.</description>
+Then how kubernetes is able to do the Authentication ?  Using CA certificates  We can configure to use CA authority Create CA certificates with user name and sign it with kubernetes CA certificate will have the user data (not the kubernetes). Kubernetes will only validate the certificate.     Using external systems  As it is deligating this authentication to external systems, we can easily onboard users into the kubernetes.</description>
     </item>
     
     <item>
@@ -94,8 +90,8 @@ Solution: Put this openrc script file in the path (so that we can invoke this fr
       
       <guid>https://dineshba.github.io/posts/terraform_state/</guid>
       <description>Lets say you corrupte your terraform state. There are multiple ways in which you can corrupte it. So I am not gonna tell how we corrupted it.
-In order to fix it, 1) You have to remove unneccassary resources from the state.
-terraform state rm resource.resource_id #eg: terraform state rm google_container_node_pool.node_pool #eg: terraform state rm google_container_cluster.cluster  2) You have to import the actual state into the state file (Make sure import is available for your resource)</description>
+In order to fix it,
+ You have to remove unneccassary resources from the state.  terraform state rm resource.resource_id #eg: terraform state rm google_container_node_pool.node_pool #eg: terraform state rm google_container_cluster.cluster You have to import the actual state into the state file (Make sure import is available for your resource)  terraform import resource.</description>
     </item>
     
     <item>
@@ -106,7 +102,7 @@ terraform state rm resource.resource_id #eg: terraform state rm google_container
       <guid>https://dineshba.github.io/posts/minikube/</guid>
       <description>In oneliner, minikube is a tool that makes it easy to run Kubernetes locally.
 In kube-system namespace, we can see result like below,
-$ kubectl get pods -n kube-system -o name -l tier=control-plane pod/etcd-minikube pod/kube-apiserver-minikube pod/kube-controller-manager-minikube pod/kube-scheduler-minikube #scheduler is running, but who scheduled ?  Whenever we create pod(rs/deployments/sts/ds), Scheduler is the one which schedules this pods into any of the available node (in minikube, there is only one). In minikube, kube-scheduler-minikube is the one who schedules.</description>
+$ kubectl get pods -n kube-system -o name -l tier=control-plane pod/etcd-minikube pod/kube-apiserver-minikube pod/kube-controller-manager-minikube pod/kube-scheduler-minikube #scheduler is running, but who scheduled ? Whenever we create pod(rs/deployments/sts/ds), Scheduler is the one which schedules this pods into any of the available node (in minikube, there is only one). In minikube, kube-scheduler-minikube is the one who schedules.</description>
     </item>
     
     <item>
@@ -146,7 +142,7 @@ Inorder to get data from any computer we need to know the address of the compute
       
       <guid>https://dineshba.github.io/posts/theme/</guid>
       <description>Backbone of my website: I am using hugo to build this website. Thanks to Aswin Karthik for his blog by which I setup this website. Just write markdown files and push, and travis-ci will publish your website. So cool !!!.
-There are lot of themes available here. After some search, I landed to current theme which is hyde. I really liked the theme and it saved lot of my time.</description>
+There are lot of themes available here. After some search, I landed to current theme which is hyde. I really liked the theme and it saved lot of my time. This theme gives lot of options to customize our website.</description>
     </item>
     
     <item>
@@ -155,9 +151,9 @@ There are lot of themes available here. After some search, I landed to current t
       <pubDate>Sat, 31 Aug 2019 00:41:10 +0530</pubDate>
       
       <guid>https://dineshba.github.io/posts/fzf/</guid>
-      <description>Installation for new users $ brew install fzf $ $(brew --prefix)/opt/fzf/install # useful key bindings and fuzzy completion   Note: Its better to use key bindings and fuzzy completion
- Default options that I use export FZF_DEFAULT_OPTS=&#39;--height 40% --reverse --border&#39;  My usages To Search in command history: CTRL + R
-To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd ** + TAB  To find and open files in vim(or any editor): vim $(fzf) vim + (CTRL + T) vim ** + TAB vim $(fzf --preview &#39;cat {}&#39;)   You can even search and open multiple files using tab</description>
+      <description>Installation for new users $ brew install fzf $ $(brew --prefix)/opt/fzf/install # useful key bindings and fuzzy completion  Note: Its better to use key bindings and fuzzy completion
+ Default options that I use export FZF_DEFAULT_OPTS=&amp;#39;--height 40% --reverse --border&amp;#39; My usages To Search in command history: CTRL + R
+To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd ** + TAB To find and open files in vim(or any editor): vim $(fzf) vim + (CTRL + T) vim ** + TAB vim $(fzf --preview &amp;#39;cat {}&amp;#39;)  You can even search and open multiple files using tab</description>
     </item>
     
     <item>
@@ -168,7 +164,7 @@ To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd 
       <guid>https://dineshba.github.io/posts/exec/</guid>
       <description>exec (built-in command) We can use exec for two use cases (as far as I learned today :-P)
 To create independent shell from current shell Usual way:
-$ bash # created a bash shell $ #do whatever you wanted $ exit # will go back to the shell which it created  Using exec:
+$ bash # created a bash shell $ #do whatever you wanted $ exit # will go back to the shell which it created Using exec:
 $ exec bash #created a bash shell and killed the current shell $ #do whatever you wanted $ exit # will not go back to the shell which it created.</description>
     </item>
     
@@ -179,10 +175,8 @@ $ exec bash #created a bash shell and killed the current shell $ #do whatever yo
       
       <guid>https://dineshba.github.io/talks/</guid>
       <description>Recent Top
- Power of Hashicorp Vault and it&amp;rsquo;s internal
-As we are started moving all our infra to cloud,secret management for the applications and also for the developers/infra admin is the challenging task. This talk will discuss about how Vault solves this problem and also lets understand the reasons behind the architecture of vault.
- How to orchestrate containers and what are the components needed for it ?
-We all agree that containers are great.</description>
+  Power of Hashicorp Vault and it&amp;rsquo;s internal
+As we are started moving all our infra to cloud,secret management for the applications and also for the developers/infra admin is the challenging task. This talk will discuss about how Vault solves this problem and also lets understand the reasons behind the architecture of vault.    How to orchestrate containers and what are the components needed for it ?</description>
     </item>
     
     <item>

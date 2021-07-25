@@ -1,108 +1,66 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>https://dineshba.github.io/</loc>
     <lastmod>2021-07-21T08:05:15+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/github-actions-approval/</loc>
     <lastmod>2021-07-21T08:05:15+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/</loc>
     <lastmod>2021-07-21T08:05:15+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/git-access-management/</loc>
     <lastmod>2020-12-18T17:49:40+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/history/</loc>
     <lastmod>2020-07-12T13:32:13+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/gitfetcher/</loc>
     <lastmod>2020-06-26T15:38:55+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/kubernetesusers/</loc>
     <lastmod>2020-06-20T22:58:45+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/openrc/</loc>
     <lastmod>2020-05-19T21:31:36+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/csrf/</loc>
     <lastmod>2020-05-08T19:27:40+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/terraform_state/</loc>
     <lastmod>2020-03-11T20:12:28+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/minikube/</loc>
     <lastmod>2019-12-25T13:10:48+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/not_all_machines_are_pingable/</loc>
     <lastmod>2019-12-12T22:16:35+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/resolve_vs_reach/</loc>
     <lastmod>2019-12-10T08:46:06+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/oss/</loc>
     <lastmod>2019-09-04T22:45:25+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/theme/</loc>
     <lastmod>2019-08-31T00:50:33+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/fzf/</loc>
     <lastmod>2019-08-31T00:41:10+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/posts/exec/</loc>
     <lastmod>2019-08-27T22:56:45+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/talks/</loc>
     <lastmod>2019-08-27T20:05:50+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/about/</loc>
     <lastmod>2019-08-26T20:05:50+05:30</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/categories/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://dineshba.github.io/tags/</loc>
   </url>
-  
 </urlset>
