@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,108 +51,87 @@
     <div class="post">
   <h1>There are no users in Kubernetes</h1>
   <time datetime=2020-06-20T22:58:45&#43;0530 class="post-date">Sat, Jun 20, 2020</time>
-  
-
-<h4 id="where-is-user-information-stored-in-kubernetes">Where is user information stored in kubernetes ?</h4>
-
+  <h4 id="where-is-user-information-stored-in-kubernetes-">Where is user information stored in kubernetes ?</h4>
 <p>Kubernetes will not store the user details.</p>
-
-<h4 id="then-how-kubernetes-is-able-to-do-the-authentication">Then how kubernetes is able to do the Authentication ?</h4>
-
+<h4 id="then-how-kubernetes-is-able-to-do-the-authentication-">Then how kubernetes is able to do the Authentication ?</h4>
 <ul>
 <li>Using CA certificates
-
 <ul>
 <li>We can configure to use CA authority</li>
 <li>Create CA certificates with user name and sign it with kubernetes</li>
 <li>CA certificate will have the user data (not the kubernetes). Kubernetes will only validate the certificate.</li>
-</ul></li>
 </ul>
-
-<p><img src="/ca.png" alt="ca.png" /></p>
-
+</li>
+</ul>
+<p><img src="/ca.png" alt="ca.png"></p>
 <ul>
 <li>Using external systems
-
 <ul>
 <li>As it is deligating this authentication to external systems, we can <strong>easily onboard users into the kubernetes</strong>. Eg: Lets say your organization have Okta based SSO, then you can easily integrate that to kubernetes and onboard all employees to kubernetes</li>
-</ul></li>
 </ul>
-
-<p><img src="/auth.png" alt="auth.png" /></p>
-
-<h4 id="how-kubernetes-components-are-talking-securely">How kubernetes components are talking securely ?</h4>
-
+</li>
+</ul>
+<p><img src="/auth.png" alt="auth.png"></p>
+<h4 id="how-kubernetes-components-are-talking-securely-">How kubernetes components are talking securely ?</h4>
 <ul>
 <li>Using CA certificates
-
 <ul>
 <li>If you running in minikube or using kubeadm, you see the volume mount of cert files to the pods in kube-system namespace.
-
 <ul>
 <li>Eg: scheduler pod will have scheduler.conf file mounted</li>
-</ul></li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
+</li>
+</ul>
 <h4 id="can-we-share-this-config-file-to-everybody">Can we share this config file to everybody?</h4>
-
 <ul>
 <li>We can definitely share. Anybody with CA certificate can talk to kubernetes and get authenticated</li>
 <li>But, it is very difficult to invalidate the CA certificate. So if cert is leaked, in order to invalidate, we have to reset CA authority in master and change all the CA certificates.</li>
 </ul>
-
-<h4 id="can-we-use-ca-method-to-authenticate-machines-to-talk-to-kubernetes">Can we use CA method to authenticate machines to talk to kubernetes ?</h4>
-
+<h4 id="can-we-use-ca-method-to-authenticate-machines-to-talk-to-kubernetes-">Can we use CA method to authenticate machines to talk to kubernetes ?</h4>
 <ul>
 <li>Yes we can do it</li>
 <li>Same as discussed above. Difficult to invalidate the certificate.</li>
 </ul>
-
-<h4 id="then-how-we-can-give-permission-for-machine-process-bot-to-talk-to-kubernetes">Then how we can give permission for machine/process/bot to talk to kubernetes ?</h4>
-
+<h4 id="then-how-we-can-give-permission-for-machineprocessbot-to-talk-to-kubernetes-">Then how we can give permission for machine/process/bot to talk to kubernetes ?</h4>
 <ul>
 <li>We have another type of special user called <code>ServiceAccount</code>
-
 <ul>
 <li>This serviceAccount will be stored in kubernetes (etcd)</li>
 <li>We can easily create serviceAccount <code>kubectl create sa &lt;sa-name&gt;</code></li>
 <li>It will automatically create a secret (jwt token), using this token we can talk to kubernetes
-<img src="/sa.png" alt="sa.png" /></li>
-</ul></li>
+<img src="/sa.png" alt="sa.png"></li>
 </ul>
-
-<h4 id="how-authorization-is-happening-in-kubernetes">How authorization is happening in kubernetes ?</h4>
-
+</li>
+</ul>
+<h4 id="how-authorization-is-happening-in-kubernetes-">How authorization is happening in kubernetes ?</h4>
 <ul>
 <li>Using RBAC
-
 <ul>
 <li>This information will be stored inside the kubernetes(etcd) as kubernetes objects</li>
 <li>There are 4 objects available
-
 <ul>
 <li>Role (Resources + permission)
-
 <ul>
 <li>eg: resource = pod, permission = list,get</li>
-</ul></li>
+</ul>
+</li>
 <li>RoleBinding (Role + User)
-
 <ul>
 <li>eg: readonlyRole + dinesh or readonlyRole + sa</li>
 <li>rolebinding can be for a user or for a service account</li>
-</ul></li>
+</ul>
+</li>
 <li>ClusterRole (Same as Role but for all namespaces)</li>
 <li>ClusterRoleBinding (Same as RoleBinding but for all namespaces)</li>
-</ul></li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
+</li>
+</ul>
 <h5 id="eg">Eg:</h5>
-
 <p>Create a role to get,list,watch pods</p>
-
 <pre><code>cat &lt;&lt;EOF | kubectl apply -f -
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -169,10 +148,7 @@ rules:
   - get
   - list
 EOF
-</code></pre>
-
-<p>Create a role binding for the user <code>dinesh</code> and for service account <code>dinesh</code> with role <code>podReader</code>.</p>
-
+</code></pre><p>Create a role binding for the user <code>dinesh</code> and for service account <code>dinesh</code> with role <code>podReader</code>.</p>
 <pre><code>cat &lt;&lt;EOF | kubectl apply -f -
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -192,9 +168,7 @@ subjects:
   name: dinesh
   namespace: default
 EOF
-</code></pre>
-
-<p>Once the user is authenticated, based on the role, they/it can access the resource.</p>
+</code></pre><p>Once the user is authenticated, based on the role, they/it can access the resource.</p>
 
 </div>
 

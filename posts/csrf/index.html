@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,70 +51,43 @@
     <div class="post">
   <h1>CSRF and its protection</h1>
   <time datetime=2020-05-08T19:27:40&#43;0530 class="post-date">Fri, May 8, 2020</time>
-  
-
-<h4 id="what-is-cookie">What is Cookie ?</h4>
-
+  <h4 id="what-is-cookie-">What is Cookie ?</h4>
 <p>An HTTP cookie (web cookie, browser cookie) is a small piece of data that a <strong>server sends</strong> to the user&rsquo;s web browser. The browser may store it and <strong>send it back</strong> with the next request to the same server. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">source</a></p>
-
 <blockquote>
 <p>Note: It is sent to the server back by the browser <strong>by default</strong></p>
 </blockquote>
-
 <h4 id="cross-site-request-forgery-csrf">Cross-Site Request Forgery (CSRF)</h4>
-
 <p>Lets say you logged into the bank website and the bank website uses cookies to store the user authentication details (say sessionId or oauth tokens)</p>
-
 <ul>
 <li>Lets say the attacker sends a mail which contains hidden javascript to send ajax requests to the bank website and the victim opens it</li>
 <li>Lets say the attacker creates a website which will to send ajax requests to the bank website and the victim opens that website</li>
 </ul>
-
 <p>In both these cases, browser will send the valid cookies of the bank website to it and the bank site cannot differentiate between the proper and malicious request.</p>
-
-<h4 id="can-this-attack-be-applied-to-all-kind-of-requests">Can this attack be applied to all kind of requests ?</h4>
-
+<h4 id="can-this-attack-be-applied-to-all-kind-of-requests-">Can this attack be applied to all kind of requests ?</h4>
 <p>Only to the <strong>state chaging</strong> requests which means generally POST/PUT/PATCH</p>
-
-<h5 id="why-it-is-not-applicable-to-read-only-requests">Why it is not applicable to read-only requests ?</h5>
-
+<h5 id="why-it-is-not-applicable-to-read-only-requests-">Why it is not applicable to read-only requests ?</h5>
 <p>For read only requests, the malicious website will receive the data from the bank site. It cannot do anything with that.</p>
-
 <h4 id="one-of-the-easy-way-to-protect">One of the easy way to protect:</h4>
-
 <h4 id="simplest-fix">Simplest fix</h4>
-
 <p>Use <code>SameSite=Strict/Lax</code> cookies</p>
-
 <p><em><code>SameSite=Strict</code></em>
 Browsers should only send these cookies with requests originated from the same domain/site as the target domain.</p>
-
 <p><em><code>SameSite=Lax</code></em>
 Cookies are allowed to be sent with top-level navigations and will be sent along with GET request initiated by third party website. This is the default value in modern browsers.</p>
-
 <h5 id="disclaimer">Disclaimer:</h5>
-
 <p>A current limitation of same-site Cookies is that not all modern browsers support them</p>
-
 <h4 id="another-fix">Another fix</h4>
-
-<h5 id="can-javascript-read-cookies">Can javascript read cookies ?</h5>
-
+<h5 id="can-javascript-read-cookies-">Can javascript read cookies ?</h5>
 <ul>
 <li>For <code>httpOnly=true</code> cookie (httpOnly is one of the property of the cookie), javascript can <strong>never</strong> read the cookie. But the browser can send it to the same server which provided it</li>
 <li>For <code>httpOnly=false</code> cookie, <strong>only javascript running in the same domain can read the cookie</strong>. Eg: cookie of <code>www.mybank.com</code> can be read by the javascript running in <code>www.mybank.com</code> page.</li>
 </ul>
-
 <p>So we can create a <code>random string</code> from the backend and send to the browser as the <code>httpOnly=false</code> cookie (say, name of the cookie <code>CSRF-TOKEN</code>). We can write javascript to read the cookie and add as <strong>header</strong> to all the <code>state changing</code> requests (say, the header name is <code>X-CSRF-TOKEN</code>).</p>
-
 <p>So our backend will receive two things in the request header.
-    - <code>CSRF-TOKEN</code> sent by browser by default
-    - <code>X-CSRF-TOKEN</code> sent by the javascript running in the bank website pages.</p>
-
+- <code>CSRF-TOKEN</code> sent by browser by default
+- <code>X-CSRF-TOKEN</code> sent by the javascript running in the bank website pages.</p>
 <p><strong>If both are same</strong>, then request is originated from the proper website. Simple 🥳🥳🥳</p>
-
 <h4 id="fact">Fact</h4>
-
 <p>CSRF attacks were at number 5 in the OWASP Top 10 list published in 2010, but they declined to number 8 in the OWASP Top Ten in 2013. People suggested that the reason for this was <strong>increased awareness of CSRF and the common use of Anti-CSRF tokens by frameworks.</strong></p>
 
 </div>

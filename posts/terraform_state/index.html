@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -53,24 +53,21 @@
   <time datetime=2020-03-11T20:12:28&#43;0530 class="post-date">Wed, Mar 11, 2020</time>
   <p>Lets say you corrupte your terraform state. There are multiple ways in which you
 can corrupte it. So I am not gonna tell how we corrupted it.</p>
+<p>In order to fix it,</p>
+<ol>
+<li>You have to remove unneccassary resources from the state.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">terraform state rm resource.resource_id
+<span style="color:#75715e">#eg: terraform state rm google_container_node_pool.node_pool</span>
+<span style="color:#75715e">#eg: terraform state rm google_container_cluster.cluster</span>
+</code></pre></div><ol start="2">
+<li>You have to import the actual state into the state file (Make sure import is available for your resource)</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">terraform import resource.resource_id resource_specification
+<span style="color:#75715e">#eg: terraform import google_container_node_pool.node_pool &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;/&lt;node-pool-name&gt;</span>
+<span style="color:#75715e">#eg: terraform import module.gke_cluster.google_container_cluster.cluster &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;</span>
 
-<p>In order to fix it,
-1) You have to remove unneccassary resources from the state.</p>
-
-<pre><code class="language-bash">terraform state rm resource.resource_id
-#eg: terraform state rm google_container_node_pool.node_pool
-#eg: terraform state rm google_container_cluster.cluster
-</code></pre>
-
-<p>2) You have to import the actual state into the state file (Make sure import is available for your resource)</p>
-
-<pre><code class="language-bash">terraform import resource.resource_id resource_specification
-#eg: terraform import google_container_node_pool.node_pool &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;/&lt;node-pool-name&gt;
-#eg: terraform import module.gke_cluster.google_container_cluster.cluster &lt;gcp-project&gt;/&lt;region&gt;/&lt;cluster-name&gt;
-
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: We can manually edit the state file and fix it. You can do that only
 when you have permission to the remote backend(if you are having one) and when you are expert in understanding the state file.</p>
 </blockquote>

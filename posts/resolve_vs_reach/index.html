@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,23 +51,15 @@
     <div class="post">
   <h1>Resolve vs Reach</h1>
   <time datetime=2019-12-10T08:46:06&#43;0530 class="post-date">Tue, Dec 10, 2019</time>
-  
-
-<p>I have seen lot of people confuse between resolving dns vs reach IP. So this small blog.</p>
-
+  <p>I have seen lot of people confuse between resolving dns vs reach IP. So this small blog.</p>
 <p>Inorder to get data from any computer we need to know the address of the computer which is IP address. Let&rsquo;s say we want to get some data from google and its IP is <code>172.217.31.196</code> (currently). Its very hard to remember this IP and also they can have multiple machines(IPs) which will give the same data (horizontal scaling). So we cannot remember IPs. So we need a map (key: name, value: IP) stored in a server called DNS whose IP is configured automatically (done by DHCP server) when we connect to internet (8.8.8.8 or 1.1.1.1 or your custom dns server).</p>
-
 <p>So when we do <code>www.google.com</code> in browser</p>
-
 <pre><code>1) Check which dns server to use in `/etc/resolve.conf`
 2) Use that dns server to get the `ip address` of www.google.com
 3) Use that IP address to connect and transfer data
 </code></pre>
-
 <p><strong>First two steps</strong> is <code>resolve</code> and <strong>third step</strong> is <code>reach</code>.</p>
-
 <h3 id="example">Example:</h3>
-
 <p>Let&rsquo;s say I want to expose/transfer some data to my colleagues. And my ip is <code>192.168.1.4</code> which is private and will be accessible only to the people whose is in my network. Instead of asking my colleagues to use this IP, we can put an entry in public DNS server (8.8.8.8 or 1.1.1.1). Key is <code>www.dineshba.com</code> and value is <code>192.168.1.4</code>. Once that is done, anybody can <strong>resolve</strong> <code>www.dineshba.com</code> to <code>192.168.1.4</code> as we added entry in public dns server. But it is reachable only to people in my network.</p>
 
 </div>

@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,111 +51,78 @@
     <div class="post">
   <h1>Openrc</h1>
   <time datetime=2020-05-19T21:31:36&#43;0530 class="post-date">Tue, May 19, 2020</time>
-  
-
-<h4 id="problem-statement">Problem Statement:</h4>
-
+  <h4 id="problem-statement">Problem Statement:</h4>
 <p>After doing <code>git push</code> how many of us wanted to see the</p>
-
 <ul>
 <li>status of the pipeline</li>
 <li>new commits in github/gitlab ui</li>
 <li>new artifacts in the nexus repo</li>
 <li>wiki page of the git repo</li>
 </ul>
-
 <p>To be generic, you want to open a particular url after an action. How can we achieve it easily ?</p>
-
 <h4 id="solution">Solution:</h4>
-
 <p>Put this openrc script file in the path (so that we can invoke this from anywhere) Eg: <code>/usr/local/bin/openrc</code></p>
-
 <blockquote>
 <p>Note: Below script depends on <a href="https://github.com/paulirish/git-open">git-open</a>, <a href="https://github.com/junegunn/fzf">fzf</a>, <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> (replace rg with grep if you want)</p>
 </blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cat /usr/local/bin/openrc
+<span style="color:#75715e">#!/usr/bin/env bash</span>
 
-<pre><code class="language-sh">$ cat /usr/local/bin/openrc
-#!/usr/bin/env bash
-
-gitUrl=$(git open -p)
-fileContent=$gitUrl
-file=&quot;.openrc&quot;
-if [ -f &quot;$file&quot; ]
-then
-	echo $gitUrl | cat $file - |rg ^http | fzf --select-1 -m | xargs -I{} open {}
-else
+gitUrl<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>git open -p<span style="color:#66d9ef">)</span>
+fileContent<span style="color:#f92672">=</span>$gitUrl
+file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.openrc&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f <span style="color:#e6db74">&#34;</span>$file<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>
+<span style="color:#66d9ef">then</span>
+	echo $gitUrl | cat $file - |rg ^http | fzf --select-1 -m | xargs -I<span style="color:#f92672">{}</span> open <span style="color:#f92672">{}</span>
+<span style="color:#66d9ef">else</span>
     open $gitUrl
-fi
-</code></pre>
-
-<p>Have a file <code>.openrc</code> with list of urls in your repo directory.</p>
-
-<p><img src="/openrc.gif" alt="openrc.gif" /></p>
-
+<span style="color:#66d9ef">fi</span>
+</code></pre></div><p>Have a file <code>.openrc</code> with list of urls in your repo directory.</p>
+<p><img src="/openrc.gif" alt="openrc.gif"></p>
 <h5 id="my-usecase">My usecase:</h5>
-
 <p>Want to see the result of jenkins pipeline after <code>git push</code>
 So, my <code>.openrc</code> will be like</p>
-
-<pre><code class="language-sh">$ cat .openrc
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cat .openrc
 http://myjenkins.com/job/my-repo/job/master/
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: Url should start with http:// or https:// so that <code>open</code> command opens in default browser.</p>
 </blockquote>
-
 <p>So after pushed, I will do</p>
-
-<pre><code class="language-sh">$ openrc # which opens my jenkins pipeline url for the master branch
-</code></pre>
-
-<h4 id="why-not-plain-git-open-https-github-com-paulirish-git-open">Why not plain <a href="https://github.com/paulirish/git-open">git-open</a> ?</h4>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ openrc <span style="color:#75715e"># which opens my jenkins pipeline url for the master branch</span>
+</code></pre></div><h4 id="why-not-plain-git-openhttpsgithubcompaulirishgit-open-">Why not plain <a href="https://github.com/paulirish/git-open">git-open</a> ?</h4>
 <ul>
 <li>I used it a lot when my pipelines were in Gitlab. When we are having pipelines in different url other than git url, git-open is not very useful.</li>
 </ul>
-
 <p>So started using this <code>script</code> which makes my life easily.</p>
-
 <h4 id="how-the-script-evolved">How the script evolved:</h4>
-
 <ul>
-<li><p>Initial version:</p>
-
-<pre><code class="language-sh">alias openrc=&quot;cat .openrc | xargs -I{} open {}&quot;
-</code></pre></li>
-
-<li><p>Use grep/<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> instead of cat to remove the empty files</p>
-
-<pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | xargs -I{} open {}&quot;
-$ # or
-$ alias openrc=&quot;rg . .openrc | xargs -I{} open {}&quot;
-</code></pre></li>
-
-<li><p>Use <a href="https://github.com/junegunn/fzf">fzf</a> to select from mutilple urls</p>
-
+<li>Initial version:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cat .openrc | xargs -I{} open {}&#34;</span>
+</code></pre></div><ul>
+<li>Use grep/<a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> instead of cat to remove the empty files</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grep . .openrc | xargs -I{} open {}&#34;</span>
+$ <span style="color:#75715e"># or</span>
+$ alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rg . .openrc | xargs -I{} open {}&#34;</span>
+</code></pre></div><ul>
+<li>Use <a href="https://github.com/junegunn/fzf">fzf</a> to select from mutilple urls
 <ul>
 <li>Auto select if only one url present (&ndash;select-1 flag)</li>
-
-<li><p>Select more than one url using <TAB> (-m flag)</p>
-
-<pre><code class="language-sh">$ alias openrc=&quot;grep . .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
-</code></pre></li>
-</ul></li>
-
-<li><p>Consider only the valid urls (starts with http(s))</p>
-
-<pre><code class="language-sh">$ alias openrc=&quot;grep ^http .openrc | fzf --select-1 -m | xargs -I{} open {}&quot;
-</code></pre></li>
-
-<li><p>Sometimes, I have to think to between typing <code>openrc or git open</code>. So removing that unnecessary thinking by below thinking 😛. Appending the output of <code>git open</code> to <code>.openrc</code> so that we can always type <code>openrc</code></p>
-
-<pre><code class="language-sh">$ alias openrc=&quot;echo \$(git open -p) | cat .openrc - |rg ^http | fzf --select-1 -m | xargs -I{} open {}&quot;
-</code></pre></li>
+<li>Select more than one url using <!-- raw HTML omitted --> (-m flag)</li>
 </ul>
-
-<p>Note: The above script will print the error message if the <code>.openrc</code> file is not found. But still it will open the git url in the repo. To fix this, I moved from alias to script.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grep . .openrc | fzf --select-1 -m | xargs -I{} open {}&#34;</span>
+</code></pre></div><ul>
+<li>Consider only the valid urls (starts with http(s))</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;grep ^http .openrc | fzf --select-1 -m | xargs -I{} open {}&#34;</span>
+</code></pre></div><ul>
+<li>Sometimes, I have to think to between typing <code>openrc or git open</code>. So removing that unnecessary thinking by below thinking 😛. Appending the output of <code>git open</code> to <code>.openrc</code> so that we can always type <code>openrc</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ alias openrc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;echo \$(git open -p) | cat .openrc - |rg ^http | fzf --select-1 -m | xargs -I{} open {}&#34;</span>
+</code></pre></div><p>Note: The above script will print the error message if the <code>.openrc</code> file is not found. But still it will open the git url in the repo. To fix this, I moved from alias to script.</p>
 
 </div>
 

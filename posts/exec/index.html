@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,41 +51,26 @@
     <div class="post">
   <h1>Super cool exec command</h1>
   <time datetime=2019-08-27T22:56:45&#43;0530 class="post-date">Tue, Aug 27, 2019</time>
-  
-
-<h2 id="exec-built-in-command">exec (built-in command)</h2>
-
+  <h2 id="exec-built-in-command">exec (built-in command)</h2>
 <p>We can use exec for two use cases (as far as I learned today :-P)</p>
-
 <h4 id="to-create-independent-shell-from-current-shell">To create independent shell from current shell</h4>
-
 <p>Usual way:</p>
-
-<pre><code class="language-bash">$ bash # created a bash shell
-$ #do whatever you wanted
-$ exit # will go back to the shell which it created
-</code></pre>
-
-<p>Using exec:</p>
-
-<pre><code class="language-bash">$ exec bash #created a bash shell and killed the current shell
-$ #do whatever you wanted
-$ exit  # will not go back to the shell which it created.
-</code></pre>
-
-<h4 id="to-change-output-error-stream-of-current-process">To change output/error stream of current process</h4>
-
-<pre><code class="language-bash">$ echo 'Hi'        # printed in output stream
-$ echo 'Hi' 1&gt;&amp;2   # printed in error stream (output -&gt; error)
-$ #Note: 1 is output stream, 2 is error stream
-$ exec 2&gt;/dev/null # redirect error stream of current process to null (error -&gt; null)
-$ echo 'Hi' 1&gt;&amp;2   # will not get printed (as output -&gt; error -&gt; null)
-$ exec 1&gt;/dev/null # redirect output stream of current process to null (output -&gt; null)
-$ echo 'Hi' # will not get printed (as output -&gt; null)
-</code></pre>
-
-<h3 id="links">Links</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ bash <span style="color:#75715e"># created a bash shell</span>
+$ <span style="color:#75715e">#do whatever you wanted</span>
+$ exit <span style="color:#75715e"># will go back to the shell which it created</span>
+</code></pre></div><p>Using exec:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ exec bash <span style="color:#75715e">#created a bash shell and killed the current shell</span>
+$ <span style="color:#75715e">#do whatever you wanted</span>
+$ exit  <span style="color:#75715e"># will not go back to the shell which it created.</span>
+</code></pre></div><h4 id="to-change-outputerror-stream-of-current-process">To change output/error stream of current process</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ echo <span style="color:#e6db74">&#39;Hi&#39;</span>        <span style="color:#75715e"># printed in output stream</span>
+$ echo <span style="color:#e6db74">&#39;Hi&#39;</span> 1&gt;&amp;<span style="color:#ae81ff">2</span>   <span style="color:#75715e"># printed in error stream (output -&gt; error)</span>
+$ <span style="color:#75715e">#Note: 1 is output stream, 2 is error stream</span>
+$ exec 2&gt;/dev/null <span style="color:#75715e"># redirect error stream of current process to null (error -&gt; null)</span>
+$ echo <span style="color:#e6db74">&#39;Hi&#39;</span> 1&gt;&amp;<span style="color:#ae81ff">2</span>   <span style="color:#75715e"># will not get printed (as output -&gt; error -&gt; null)</span>
+$ exec 1&gt;/dev/null <span style="color:#75715e"># redirect output stream of current process to null (output -&gt; null)</span>
+$ echo <span style="color:#e6db74">&#39;Hi&#39;</span> <span style="color:#75715e"># will not get printed (as output -&gt; null)</span>
+</code></pre></div><h3 id="links">Links</h3>
 <ul>
 <li><a href="https://unix.stackexchange.com/questions/374008/what-does-do-in-the-middle-of-exec-dev-null">https://unix.stackexchange.com/questions/374008/what-does-do-in-the-middle-of-exec-dev-null</a></li>
 <li><a href="https://www.computerhope.com/unix/bash/exec.htm">https://www.computerhope.com/unix/bash/exec.htm</a></li>

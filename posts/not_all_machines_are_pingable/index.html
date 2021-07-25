@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,26 +51,17 @@
     <div class="post">
   <h1>Not all machines are pingable</h1>
   <time datetime=2019-12-12T22:16:35&#43;0530 class="post-date">Thu, Dec 12, 2019</time>
-  
-
-<p>To check if a machine(IP) is reachable, I only used <code>ping</code>. If ping is not working, then I will come to a conclusion that <code>IP is not reachable</code>. If you are like me, please read further.</p>
-
+  <p>To check if a machine(IP) is reachable, I only used <code>ping</code>. If ping is not working, then I will come to a conclusion that <code>IP is not reachable</code>. If you are like me, please read further.</p>
 <h4 id="how-ping-works">How Ping works?</h4>
-
 <p>Ping sends the <code>ICMP Echo</code> to the given IP and waits for the <code>ICMP Echo Reply</code>. If we get the <code>Echo Reply</code>, then ICMP server in the given IP is able to send response to our <code>Echo</code> request. We can have timeouts for this roundtrip.</p>
-
 <p>So if we didn&rsquo;t get <code>Echo Reply</code> can we assume that given IP is not reachable. <strong>No, it is not true</strong>.</p>
-
 <h4 id="reasons-for-ping-not-working">Reasons for ping not working:</h4>
-
 <pre><code>1) ping command has been disabled for that network (by the syadmin)
 2) You have no Internet connection/network connectivity
 3) A firewall can filter ICMP Echo messages
 4) IP is not actually reachable
 </code></pre>
-
 <h4 id="then-how-to-test-the-reachability-of-an-ip">Then, how to test the reachability of an IP</h4>
-
 <pre><code>1) If you know the port,
     1) `telnet IP PORT` once connected, we cannot disconnect
     2) `curl IP:PORT` (hope, get call shouldn't be a problem)

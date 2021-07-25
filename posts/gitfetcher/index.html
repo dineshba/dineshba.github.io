@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,75 +51,59 @@
     <div class="post">
   <h1>Gitfetcher</h1>
   <time datetime=2020-06-26T15:38:55&#43;0530 class="post-date">Fri, Jun 26, 2020</time>
-  
-
-<h4 id="why-i-will-not-do-git-fetch-or-git-pull">Why I will not do <code>git fetch</code> or <code>git pull</code> ?</h4>
-
+  <h4 id="why-i-will-not-do-git-fetch-or-git-pull-">Why I will not do <code>git fetch</code> or <code>git pull</code> ?</h4>
 <p>Because I have <strong>automated</strong> it.</p>
-
-<p><img src="/gitfetcher.gif" alt="gitfetcher.gif" /></p>
-
+<p><img src="/gitfetcher.gif" alt="gitfetcher.gif"></p>
 <p>Highly inspired from <a href="https://github.com/magicmonty/bash-git-prompt">bash-git-prompt</a>. If you are already using it (or equivalent of it), below custom script may be useful to you.</p>
-
 <p><strong>Problem Statement:</strong></p>
-
 <ul>
 <li>Whenever I jump into the git directory, I do <code>git pull</code></li>
 <li>And sometimes I forget to do it which might create conflicts</li>
 </ul>
-
 <p>So created a script, which will do <code>git fetch</code></p>
-
 <ul>
 <li>whenever I jump into git directory</li>
-
-<li><p>if we havent fetched for some time (say 5 min)</p>
-
-<pre><code class="language-sh">$ cat /path/to/gitfetcher.sh
-#!/usr/bin/env bash
-
-function fetch_in_background() {
-{
-eval &quot;git fetch --quiet&quot; &amp;&gt; /dev/null
-}&amp;
-}
-
-GIT_REPO=&quot;$PWD/.git&quot;
-if [[ -e $GIT_REPO ]]; then
-FETCH_HEAD=&quot;$GIT_REPO/FETCH_HEAD&quot;
-if [[ -e &quot;${FETCH_HEAD}&quot; ]]; then
-    
-FETCH_TIMEOUT=5 #minutes after which check again
-    
-perl -e '((time - (stat(&quot;'&quot;${FETCH_HEAD}&quot;'&quot;))[9]) / 60) &gt; '&quot;${FETCH_TIMEOUT}&quot;' &amp;&amp; exit(0) || exit(1)'
-x=&quot;$?&quot;
-if [[ $x == 0 ]]; then
-  if [[ -n $(git remote show) ]]; then
-    (
-      fetch_in_background
-      disown -h
-    )
-  fi
-fi
-else 
-# echo &quot;.git/FETCH_HEAD not found&quot;
-fetch_in_background
-disown -h
-fi
-fi
-
-</code></pre></li>
+<li>if we havent fetched for some time (say 5 min)</li>
 </ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ cat /path/to/gitfetcher.sh
+<span style="color:#75715e">#!/usr/bin/env bash</span>
 
-<p>And include the above script as <code>prompter</code> in your bash/zsh/fish configfile like</p>
+<span style="color:#66d9ef">function</span> fetch_in_background<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#f92672">{</span>
+    eval <span style="color:#e6db74">&#34;git fetch --quiet&#34;</span> &amp;&gt; /dev/null
+  <span style="color:#f92672">}</span>&amp;
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-sh">### Fetch in background
-export PATH=&quot;$PATH:path/to/gitfetcher.sh&quot; # configure gitfetcher.sh in the path
-export PROMPT_COMMAND=&quot;gitfetcher.sh; $PROMPT_COMMAND&quot;
-### Fetch in background
-</code></pre>
+GIT_REPO<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$PWD<span style="color:#e6db74">/.git&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -e $GIT_REPO <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+  FETCH_HEAD<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$GIT_REPO<span style="color:#e6db74">/FETCH_HEAD&#34;</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -e <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>FETCH_HEAD<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+    
+    FETCH_TIMEOUT<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> <span style="color:#75715e">#minutes after which check again</span>
+    
+    perl -e <span style="color:#e6db74">&#39;((time - (stat(&#34;&#39;</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>FETCH_HEAD<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#39;&#34;))[9]) / 60) &gt; &#39;</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>FETCH_TIMEOUT<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#39; &amp;&amp; exit(0) || exit(1)&#39;</span>
+    x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$?<span style="color:#e6db74">&#34;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> $x <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -n <span style="color:#66d9ef">$(</span>git remote show<span style="color:#66d9ef">)</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+        <span style="color:#f92672">(</span>
+          fetch_in_background
+          disown -h
+        <span style="color:#f92672">)</span>
+      <span style="color:#66d9ef">fi</span>
+    <span style="color:#66d9ef">fi</span>
+  <span style="color:#66d9ef">else</span> 
+    <span style="color:#75715e"># echo &#34;.git/FETCH_HEAD not found&#34;</span>
+    fetch_in_background
+    disown -h
+  <span style="color:#66d9ef">fi</span>
+<span style="color:#66d9ef">fi</span>
 
-<p>You can find the source code of above script <a href="https://github.com/dineshba/dotfiles/blob/master/gitfetcher.sh">here</a> and <a href="https://github.com/dineshba/dotfiles/blob/master/.bashrc#L33-L36">sample</a> to see how I configured in my bashrc file</p>
+</code></pre></div><p>And include the above script as <code>prompter</code> in your bash/zsh/fish configfile like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">### Fetch in background</span>
+export PATH<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$PATH<span style="color:#e6db74">:path/to/gitfetcher.sh&#34;</span> <span style="color:#75715e"># configure gitfetcher.sh in the path</span>
+export PROMPT_COMMAND<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gitfetcher.sh; </span>$PROMPT_COMMAND<span style="color:#e6db74">&#34;</span>
+<span style="color:#75715e">### Fetch in background</span>
+</code></pre></div><p>You can find the source code of above script <a href="https://github.com/dineshba/dotfiles/blob/master/gitfetcher.sh">here</a> and <a href="https://github.com/dineshba/dotfiles/blob/master/.bashrc#L33-L36">sample</a> to see how I configured in my bashrc file</p>
 
 </div>
 

@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,48 +51,32 @@
     <div class="post">
   <h1>Which scheduler scheduled the scheduler in minikube ?</h1>
   <time datetime=2019-12-25T13:10:48&#43;0530 class="post-date">Wed, Dec 25, 2019</time>
-  
-
-<p>In oneliner, minikube is a tool that makes it easy to run Kubernetes locally.</p>
-
+  <p>In oneliner, minikube is a tool that makes it easy to run Kubernetes locally.</p>
 <p>In <code>kube-system</code> namespace, we can see result like below,</p>
-
-<pre><code class="language-bash">$ kubectl get pods -n kube-system -o name -l tier=control-plane
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system -o name -l tier<span style="color:#f92672">=</span>control-plane
 pod/etcd-minikube
 pod/kube-apiserver-minikube
 pod/kube-controller-manager-minikube
-pod/kube-scheduler-minikube #scheduler is running, but who scheduled ?
-</code></pre>
-
-<p>Whenever we create pod(rs/deployments/sts/ds), <code>Scheduler</code> is the one which schedules this pods into any of the available node (in minikube, there is only one).
+pod/kube-scheduler-minikube <span style="color:#75715e">#scheduler is running, but who scheduled ?</span>
+</code></pre></div><p>Whenever we create pod(rs/deployments/sts/ds), <code>Scheduler</code> is the one which schedules this pods into any of the available node (in minikube, there is only one).
 In minikube, <code>kube-scheduler-minikube</code> is the one who schedules. For long time, I wondered who scheduled the <code>kube-scheduler-minikube</code> pod to this minikube node. I assumed it as <code>magic</code> 🤪</p>
-
 <p>Now, I understood how things are happening, here you go:</p>
-
 <p>There is something called <a href="https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/">static pods</a> in kubernetes. Without  master components (<code>api-server</code>, <code>etcd</code>, <code>scheduler</code>, <code>controller-manager</code>), we can run pods in <code>kubelet</code> <strong>directly</strong>. Minikube used this to run master components and thus formed the cluster.</p>
-
 <h4 id="proof">Proof:</h4>
-
-<pre><code class="language-bash">$ minikube ssh
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ minikube ssh
 $ ps aux | grep kubelet
-root      3035  3.9  4.6 1377692 91476 ?       Ssl  07:27   0:06 /var/lib/minikube/binaries/v1.15.2/kubelet --authorization-mode=Webhook --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --cgroup-driver=cgroupfs --client-ca-file=/var/lib/minikube/certs/ca.crt --cluster-dns=10.96.0.10 --cluster-domain=cluster.local --config=/var/lib/kubelet/config.yaml --container-runtime=docker --hostname-override=minikube --kubeconfig=/etc/kubernetes/kubelet.conf --node-ip=192.168.99.100 --pod-manifest-path=/etc/kubernetes/manifests
-</code></pre>
-
-<p>In the above example, kubelet is started with <code>--pod-manifest-path=/etc/kubernetes/manifests</code></p>
-
+root      <span style="color:#ae81ff">3035</span>  3.9  4.6 <span style="color:#ae81ff">1377692</span> <span style="color:#ae81ff">91476</span> ?       Ssl  07:27   0:06 /var/lib/minikube/binaries/v1.15.2/kubelet --authorization-mode<span style="color:#f92672">=</span>Webhook --bootstrap-kubeconfig<span style="color:#f92672">=</span>/etc/kubernetes/bootstrap-kubelet.conf --cgroup-driver<span style="color:#f92672">=</span>cgroupfs --client-ca-file<span style="color:#f92672">=</span>/var/lib/minikube/certs/ca.crt --cluster-dns<span style="color:#f92672">=</span>10.96.0.10 --cluster-domain<span style="color:#f92672">=</span>cluster.local --config<span style="color:#f92672">=</span>/var/lib/kubelet/config.yaml --container-runtime<span style="color:#f92672">=</span>docker --hostname-override<span style="color:#f92672">=</span>minikube --kubeconfig<span style="color:#f92672">=</span>/etc/kubernetes/kubelet.conf --node-ip<span style="color:#f92672">=</span>192.168.99.100 --pod-manifest-path<span style="color:#f92672">=</span>/etc/kubernetes/manifests
+</code></pre></div><p>In the above example, kubelet is started with <code>--pod-manifest-path=/etc/kubernetes/manifests</code></p>
 <blockquote>
 <p>Note: <code>--pod-manifest-path</code> is path to the directory containing static pod files to run.</p>
 </blockquote>
-
-<pre><code class="language-bash">$ ls -l /etc/kubernetes/manifests
--rw-r----- 1 root root 1532 Jan  1  0001 addon-manager.yaml.tmpl
--rw------- 1 root root 1990 Dec 25 07:27 etcd.yaml
--rw------- 1 root root 2893 Dec 25 07:27 kube-apiserver.yaml
--rw------- 1 root root 2262 Dec 25 07:27 kube-controller-manager.yaml
--rw------- 1 root root  990 Dec 25 07:27 kube-scheduler.yaml
-</code></pre>
-
-<p>Thus when kubelet started, it started the master components.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l /etc/kubernetes/manifests
+-rw-r----- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">1532</span> Jan  <span style="color:#ae81ff">1</span>  <span style="color:#ae81ff">0001</span> addon-manager.yaml.tmpl
+-rw------- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">1990</span> Dec <span style="color:#ae81ff">25</span> 07:27 etcd.yaml
+-rw------- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">2893</span> Dec <span style="color:#ae81ff">25</span> 07:27 kube-apiserver.yaml
+-rw------- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">2262</span> Dec <span style="color:#ae81ff">25</span> 07:27 kube-controller-manager.yaml
+-rw------- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">990</span> Dec <span style="color:#ae81ff">25</span> 07:27 kube-scheduler.yaml
+</code></pre></div><p>Thus when kubelet started, it started the master components.</p>
 
 </div>
 

@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,46 +51,33 @@
     <div class="post">
   <h1>Terminal: History Matters</h1>
   <time datetime=2020-07-12T13:32:13&#43;0530 class="post-date">Sun, Jul 12, 2020</time>
-  
-
-<p>For more productive, it is better to reuse the commands in history. In order to do that</p>
-
+  <p>For more productive, it is better to reuse the commands in history. In order to do that</p>
 <ul>
 <li>Save more history</li>
 <li>Optimize the history</li>
 <li>Able to find and reuse history easily</li>
 </ul>
-
 <h5 id="save-more-history">Save more history</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># bashrc/zshrc/etc</span>
 
-<pre><code class="language-sh"># bashrc/zshrc/etc
+<span style="color:#75715e">#### increase history size</span>
+export HISTSIZE<span style="color:#f92672">=</span><span style="color:#ae81ff">1000000</span>
+export HISTFILESIZE<span style="color:#f92672">=</span><span style="color:#ae81ff">1000000</span>
+<span style="color:#75715e">####</span>
 
-#### increase history size
-export HISTSIZE=1000000
-export HISTFILESIZE=1000000
-####
-
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: You can specify how big you want</p>
 </blockquote>
-
 <h5 id="optimize-the-history">Optimize the history</h5>
-
 <ul>
 <li>Remove the duplicates in the histroy file</li>
 <li>Keeps the last entry when there is a duplicate (to maintain the order)</li>
 </ul>
-
 <p>I wrote a simple scirpt in <a href="https://nim-lang.org/">nim programming language</a> for the bash_history file. You can find the script <a href="https://github.com/thecasualcoder/prunehistory">here</a>. If you are using other than bash, feel free to raise PR for other shells.</p>
-
 <blockquote>
 <p>Note: For oh-my-zsh refer the comments section below which contains the helpful links to achieve the same. Thanks to Prabhu for the comments</p>
 </blockquote>
-
 <h5 id="able-to-find-and-reuse-history-easily">Able to find and reuse history easily</h5>
-
 <p>Using tools like fzf to do fuzzy search and find the older commands and use. <a href="https://dineshba.github.io/posts/fzf/">Refer my another blog</a> to see the easy usage of fzf.</p>
 
 </div>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.86.0" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Github actions with Manual Approval Jobs &middot; Dinesh&#39;s Blog</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Dinesh&#39;s Blog</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="/talks"> My Talks </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Github actions with Manual Approval Jobs</h1>
+  <time datetime=2021-07-21T08:05:15&#43;0530 class="post-date">Wed, Jul 21, 2021</time>
+  <p>Lets say we use terraform and github actions for ci/cd.</p>
+<p>We will have plan and apply steps like below</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;Terraform&#39;</span>
+
+<span style="color:#f92672">on</span>: [<span style="color:#ae81ff">push, pull_request]</span>
+
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">check_lint</span>:
+    <span style="color:#75715e">#....</span>
+  <span style="color:#f92672">check_vulnerability</span>:
+    <span style="color:#f92672">needs</span>: <span style="color:#ae81ff">check_lint</span>
+    <span style="color:#75715e">#...</span>
+  <span style="color:#f92672">plan_and_apply</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;Plan and Apply&#39;</span>
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+    <span style="color:#f92672">needs</span>: <span style="color:#ae81ff">check_vulnerability</span>
+
+    <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+    
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup Terraform</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">hashicorp/setup-terraform@v1</span>
+
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Init</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">terraform init</span>
+
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Plan</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">terraform plan</span>
+
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Apply</span>
+      <span style="color:#f92672">run</span>:  <span style="color:#ae81ff">terraform apply -auto-approve </span>
+</code></pre></div><h3 id="how-to-make-it-approval-based-">How to make it approval based ?</h3>
+<p>Using github <a href="https://docs.github.com/en/actions/reference/environments">environments</a> feature</p>
+<p>Steps:</p>
+<ul>
+<li>Create new environment <code>your repo &gt; Settings &gt; Environments</code></li>
+<li>Add the Required reviewers and save protection rule (refer below image)</li>
+<li>[Optionally] Control from which branch the deployments can happen using <code>Deployment branches</code> section</li>
+</ul>
+<blockquote>
+<p>Refer the image below: Creating a <code>prod-env</code> with required reviewers to be <code>dineshba</code></p>
+</blockquote>
+<p><img src="/github-env.png" alt="github-env.png"></p>
+<h4 id="split-single-job-into-two-inside-same-workflow">Split single job into two inside same workflow:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;Terraform&#39;</span>
+
+<span style="color:#f92672">on</span>: [<span style="color:#ae81ff">push, pull_request]</span>
+
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">check_lint</span>:
+    <span style="color:#75715e">#....</span>
+  <span style="color:#f92672">check_vulnerability</span>:
+    <span style="color:#f92672">needs</span>: <span style="color:#ae81ff">check_lint</span>
+    <span style="color:#75715e">#...</span>
+  <span style="color:#f92672">plan</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;Plan&#39;</span>
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+    <span style="color:#f92672">needs</span>: <span style="color:#ae81ff">check_vulnerability</span>
+
+    <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+    
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup Terraform</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">hashicorp/setup-terraform@v1</span>
+
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Init</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">terraform init</span>
+
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Plan</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">terraform plan</span>
+
+  <span style="color:#f92672">apply</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#39;Apply&#39;</span>
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+    <span style="color:#f92672">needs</span>: <span style="color:#ae81ff">plan</span>
+    <span style="color:#f92672">environment</span>:
+        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">prod-env</span>
+        <span style="color:#75715e"># As prod-env required reviewers is `dineshba`,</span>
+        <span style="color:#75715e"># it will wait for approval from dineshba</span>
+        
+
+    <span style="color:#f92672">steps</span>:
+    <span style="color:#75715e">#... checkout, setup, init terraform steps like plan</span>
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Terraform Apply</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">terraform apply -auto-approve</span>
+</code></pre></div><p>After the plan stage, github actions will send notification/email to configured reviewers.
+After it is <strong>approved</strong>, apply stage will run</p>
+
+</div>
+
+<h2>Comments</h2>
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-dineshba-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>

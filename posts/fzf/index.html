@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,87 +51,48 @@
     <div class="post">
   <h1>How I am using fzf for every 5 min of my programming life</h1>
   <time datetime=2019-08-31T00:41:10&#43;0530 class="post-date">Sat, Aug 31, 2019</time>
-  
-
-<h4 id="installation-for-new-users">Installation for new users</h4>
-
-<pre><code class="language-bash">$ brew install fzf
-$ $(brew --prefix)/opt/fzf/install # useful key bindings and fuzzy completion
-</code></pre>
-
-<blockquote>
+  <h4 id="installation-for-new-users">Installation for new users</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ brew install fzf
+$ <span style="color:#66d9ef">$(</span>brew --prefix<span style="color:#66d9ef">)</span>/opt/fzf/install <span style="color:#75715e"># useful key bindings and fuzzy completion</span>
+</code></pre></div><blockquote>
 <p>Note: Its better to use key bindings and fuzzy completion</p>
 </blockquote>
-
 <h4 id="default-options-that-i-use">Default options that I use</h4>
-
-<pre><code class="language-bash">export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-</code></pre>
-
-<h4 id="my-usages">My usages</h4>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export FZF_DEFAULT_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;--height 40% --reverse --border&#39;</span>
+</code></pre></div><h4 id="my-usages">My usages</h4>
 <h5 id="to-search-in-command-history">To Search in command history:</h5>
-
 <p>CTRL + R</p>
-
 <h5 id="to-change-directory">To Change directory:</h5>
-
-<pre><code class="language-bash">cd + (CTRL + T) # type cd and then press CTRL plus T
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd + <span style="color:#f92672">(</span>CTRL + T<span style="color:#f92672">)</span> <span style="color:#75715e"># type cd and then press CTRL plus T</span>
 or
 cd ** + TAB
-</code></pre>
-
-<h5 id="to-find-and-open-files-in-vim-or-any-editor">To find and open files in vim(or any editor):</h5>
-
-<pre><code class="language-bash">vim $(fzf)
-vim + (CTRL + T)
+</code></pre></div><h5 id="to-find-and-open-files-in-vimor-any-editor">To find and open files in vim(or any editor):</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vim <span style="color:#66d9ef">$(</span>fzf<span style="color:#66d9ef">)</span>
+vim + <span style="color:#f92672">(</span>CTRL + T<span style="color:#f92672">)</span>
 vim ** + TAB
-vim $(fzf --preview 'cat {}')
-</code></pre>
-
-<blockquote>
+vim <span style="color:#66d9ef">$(</span>fzf --preview <span style="color:#e6db74">&#39;cat {}&#39;</span><span style="color:#66d9ef">)</span>
+</code></pre></div><blockquote>
 <p>You can even search and open multiple files using tab</p>
 </blockquote>
-
 <h5 id="to-kill-a-process">To kill a process:</h5>
-
-<pre><code class="language-bash">kill + TAB
-</code></pre>
-
-<blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kill + TAB
+</code></pre></div><blockquote>
 <p>Note: Think about the normal way. We have to ps aux to list processes and grep the required process then copy the correct column for pid, then call kill. Here just one step.</p>
 </blockquote>
-
 <h5 id="to-ssh-into-a-machine">To ssh into a machine:</h5>
-
-<pre><code class="language-bash">ssh ** + TAB
-</code></pre>
-
-<h5 id="to-get-the-glimse-of-a-file">To get the glimse of a file</h5>
-
-<pre><code class="language-bash">fzf --preview 'cat {}'
-</code></pre>
-
-<h4 id="extensibility">Extensibility</h4>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh ** + TAB
+</code></pre></div><h5 id="to-get-the-glimse-of-a-file">To get the glimse of a file</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">fzf --preview <span style="color:#e6db74">&#39;cat {}&#39;</span>
+</code></pre></div><h4 id="extensibility">Extensibility</h4>
 <p>Fzf&rsquo;s usage is <strong>limitless</strong>. We can use it wherever <strong>we want to search and select one(or many) from a list</strong></p>
-
 <h5 id="case-1">Case 1:</h5>
-
 <pre><code>How will you jump to different directory?
 - cd /path/to/your/project/path/to/your/service
-</code></pre>
-
-<h5 id="fzf-way">Fzf way:</h5>
-
+</code></pre><h5 id="fzf-way">Fzf way:</h5>
 <pre><code>alias goproject=&quot;cd $(find path/to/your/project -type d -maxdepth 2 | fzf)&quot;
 goproject
-</code></pre>
-
-<p>You can have multiple alias for multiple projects or directories</p>
-
+</code></pre><p>You can have multiple alias for multiple projects or directories</p>
 <h5 id="case-2">Case 2:</h5>
-
 <pre><code>How will you switch git branch? (select one branch from many)
     - git branch -a
     - copy the branch name
@@ -140,20 +101,13 @@ goproject
     - git checkout + TAB (auto completion feature)
 
     Both the above approches are not O(1) :-P. How can we optimize?
-</code></pre>
-
-<h5 id="fzf-way-1">Fzf way:</h5>
-
+</code></pre><h5 id="fzf-way-1">Fzf way:</h5>
 <pre><code>alias gcx=&quot;git checkout \$(git branch -a | sed -E 's/remotes\/([a-zA-Z-]*\/)//' | grep -v '\*|HEAD' | sort |uniq | fzf --select-1)&quot;
 gcx
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>Note: try in your terminal and feel the difference</p>
 </blockquote>
-
 <h5 id="case-3">Case 3:</h5>
-
 <pre><code>How will you tmux workspaces? We are using tmuxp tool to do that.
 - tmuxp load workspace_name
 or
@@ -161,44 +115,28 @@ or
 
 First involes rembembering all workspace_names (Space Complexity != O(1)) and type correct and fastly (Time Complexity != O(1)). Second involes lot of TABs or searching from commit history (Time Complexity != O(1))
 
-</code></pre>
-
-<h5 id="fzf-way-2">Fzf way:</h5>
-
-<pre><code class="language-bash">alias ktx='tmuxp load $(ls ~/.tmuxp/*.yaml | grep &quot;.*/.tmuxp/&quot; -r &quot;&quot; | grep &quot;\.yaml&quot; -r &quot;&quot; | fzf) --yes'
-</code></pre>
-
-<h5 id="case-4">Case 4:</h5>
-
+</code></pre><h5 id="fzf-way-2">Fzf way:</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias ktx<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tmuxp load $(ls ~/.tmuxp/*.yaml | grep &#34;.*/.tmuxp/&#34; -r &#34;&#34; | grep &#34;\.yaml&#34; -r &#34;&#34; | fzf) --yes&#39;</span>
+</code></pre></div><h5 id="case-4">Case 4:</h5>
 <pre><code>Okay we created tmux workspaces easily using Case 3. How will kill tmux workspaces now?
 - tmux kill-session workspace_name
-</code></pre>
-
-<h5 id="fzf-way-3">Fzf way:</h5>
-
-<pre><code class="language-bash">$ alias tkill=&quot;for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf -m); do tmux kill-session -t \$s; done;&quot;
+</code></pre><h5 id="fzf-way-3">Fzf way:</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ alias tkill<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;for s in \$(tmux list-sessions | awk &#39;{print \$1}&#39; | rg &#39;:&#39; -r &#39;&#39; | fzf -m); do tmux kill-session -t \$s; done;&#34;</span>
 $ tkill
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: We are giving <code>fzf -m</code> which means we can select multiple and pass to next stage (basically killing multiple sessions)</p>
 </blockquote>
-
 <h5 id="other-tools-which-use-fzf-effectively">Other tools which use fzf effectively</h5>
-
 <ul>
 <li>kubectx</li>
 <li>kubens</li>
 <li>lazy-connect</li>
 <li>may be your tool</li>
 </ul>
-
 <blockquote>
 <p>replace grep with <a href="https://github.com/BurntSushi/ripgrep">rg</a> for better experience</p>
 </blockquote>
-
 <h4 id="summary">Summary:</h4>
-
 <p><strong>Wherever</strong> we want <strong>search and select one/many from a list</strong>, then we can <strong>use fzf</strong>. So the options to use is limitless. If you are <strong>using fzf in a different way</strong>, please <strong>raise an issue or a PR <a href="https://github.com/dineshba/website/blob/master/content/posts/fzf.md">here</a></strong> so that we can learn that. Thanks.</p>
 
 </div>

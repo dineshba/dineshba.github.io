@@ -3,7 +3,7 @@
 <head>
   <link href="//gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.57.2" />
+  <meta name="generator" content="Hugo 0.86.0" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
       </ul>
     </nav>
 
-    <p>&copy; 2020. All rights reserved. </p>
+    <p>&copy; 2021. All rights reserved. </p>
   </div>
 </aside>
 
@@ -51,183 +51,145 @@
     <div class="post">
   <h1>Access management for github at scale</h1>
   <time datetime=2020-12-18T17:49:40&#43;0530 class="post-date">Fri, Dec 18, 2020</time>
-  
-
-<p>In order to manage multiple users in a github organization, <strong>it is best to create multiple teams with different access and add users to the necessary teams</strong>.</p>
-
-<pre><code class="language-yaml">Example:
-  OrgName: example
-  Teams: # each team will have different repo access
-  - frontend
-  - backend
-  - devops 
-  Members:
-  - name: dineshba
-    teams: devops, backend
-  - name: another-dev
-    teams: frontend
-  - name: some-tech-lead
-    teams: frontend, backend,devops
-</code></pre>
-
-<p>Hope the above yaml explains the concept of <strong>organization, teams and team-memberships</strong> at high level</p>
-
+  <p>In order to manage multiple users in a github organization, <strong>it is best to create multiple teams with different access and add users to the necessary teams</strong>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">Example</span>:
+  <span style="color:#f92672">OrgName</span>: <span style="color:#ae81ff">example</span>
+  <span style="color:#f92672">Teams</span>: <span style="color:#75715e"># each team will have different repo access</span>
+  - <span style="color:#ae81ff">frontend</span>
+  - <span style="color:#ae81ff">backend</span>
+  - <span style="color:#ae81ff">devops </span>
+  <span style="color:#f92672">Members</span>:
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">dineshba</span>
+    <span style="color:#f92672">teams</span>: <span style="color:#ae81ff">devops, backend</span>
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">another-dev</span>
+    <span style="color:#f92672">teams</span>: <span style="color:#ae81ff">frontend</span>
+  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">some-tech-lead</span>
+    <span style="color:#f92672">teams</span>: <span style="color:#ae81ff">frontend, backend,devops</span>
+</code></pre></div><p>Hope the above yaml explains the concept of <strong>organization, teams and team-memberships</strong> at high level</p>
 <p>So the steps will be:</p>
-
 <ol>
 <li>Add user to the organization (1 time per user)</li>
 <li>Create a team if needed or reuse the team (only 1 time)</li>
 <li>Give repo access to newly created team (only 1 time)</li>
 <li>Add user to the team (1 time per user)</li>
 </ol>
-
 <p>So, number of steps for 10 users will be 10 + 1 + 1 + 10.</p>
-
 <p>To be generic, <code>2 + 2n</code> steps</p>
-
 <h4 id="at-scale">At Scale:</h4>
-
 <ul>
 <li>How easy it is to add around 100 users to your github organization and manage easily ?
-
 <ul>
 <li>Read further if you think it is not easy</li>
 <li>Read further if you think it is super boring and repeating task</li>
 <li>Read further if you will be tired of clicking mouse buttons again and again</li>
-</ul></li>
+</ul>
+</li>
 <li>How long will it take it do ?
-
 <ul>
 <li>Read further if you think it will take around 50min (Assume: 2 users can be added in 1 min)</li>
 <li>Read further if you think the automation will work but writing automation may take more time than adding manually</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>We had an usecase, where we have to add more than 100 users to group of repos in our github organization immediately and also add users in future on demand basis.</p>
-
 <p>So we created a automation to do this for us using <strong>terraform</strong> (yes, terraform is not only for infra management, we can do lot more with terraform). And it took less than 50 min (but this blog took more than 50 min 🤪)</p>
-
 <p>Lets talk using terraform. Even if you dont know about terraform, you should be able to understand things a high level.</p>
-
 <ul>
-<li><p>Declare the <a href="https://www.terraform.io/docs/providers/github/">github terraform provider</a></p>
-
-<pre><code class="language-tf">provider &quot;github&quot; {
-token        = var.github_token
-organization = var.github_organization
-}
-</code></pre></li>
+<li>Declare the <a href="https://www.terraform.io/docs/providers/github/">github terraform provider</a></li>
 </ul>
-
-<p>with this, terraform knows how to interact with github apis.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#66d9ef">provider</span> <span style="color:#e6db74">&#34;github&#34;</span> {
+  <span style="color:#a6e22e">token</span>        = var.<span style="color:#a6e22e">github_token</span>
+  <span style="color:#a6e22e">organization</span> = var.<span style="color:#a6e22e">github_organization</span>
+}
+</code></pre></div><p>with this, terraform knows how to interact with github apis.</p>
 <ul>
-<li><p>Specify the version</p>
-
-<pre><code class="language-tf">terraform {
-required_version = &quot;&gt;=0.12.6&quot;
-required_providers {
-github = &quot;~&gt; 2.9.2&quot;
-}
-}
-</code></pre></li>
+<li>Specify the version</li>
 </ul>
-
-<blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#a6e22e">terraform</span> {
+  <span style="color:#a6e22e">required_version</span> = <span style="color:#e6db74">&#34;&gt;=0.12.6&#34;</span>
+  <span style="color:#a6e22e">required_providers</span> {
+    <span style="color:#a6e22e">github</span> = <span style="color:#e6db74">&#34;~&gt; 2.9.2&#34;</span>
+  }
+}
+</code></pre></div><blockquote>
 <p>Note: Please use the latest version if you copying from here</p>
 </blockquote>
-
 <ul>
-<li><p>Define list of variables</p>
-
-<pre><code class="language-tf">variable &quot;github_token&quot; { # var used in first step
-type = string
-}
-
-variable &quot;github_organization&quot; { # var used in first step
-type    = string
-default = &quot;some-org&quot;
-}
-
-variable &quot;github_members&quot; { # var used in next steps
-type = list(string)
-
-default = [&quot;dineshba&quot;]
-}
-</code></pre></li>
-
-<li><p>Invite user to your organization</p>
-
-<pre><code class="language-tf">resource &quot;github_membership&quot; &quot;membership_for_users&quot; {
-for_each = toset(var.github_members)
-username = each.key
-role     = &quot;member&quot;
-}
-</code></pre></li>
+<li>Define list of variables</li>
 </ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#66d9ef">variable</span> <span style="color:#e6db74">&#34;github_token&#34;</span> {<span style="color:#75715e"> # var used in first step
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">type</span> = <span style="color:#a6e22e">string</span>
+}
+<span style="color:#66d9ef">
+</span><span style="color:#66d9ef">variable</span> <span style="color:#e6db74">&#34;github_organization&#34;</span> {<span style="color:#75715e"> # var used in first step
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">type</span>    = <span style="color:#a6e22e">string</span>
+  <span style="color:#a6e22e">default</span> = <span style="color:#e6db74">&#34;some-org&#34;</span>
+}
+<span style="color:#66d9ef">
+</span><span style="color:#66d9ef">variable</span> <span style="color:#e6db74">&#34;github_members&#34;</span> {<span style="color:#75715e"> # var used in next steps
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">type</span> = list(<span style="color:#a6e22e">string</span>)
 
-<blockquote>
+  <span style="color:#a6e22e">default</span> = [<span style="color:#e6db74">&#34;dineshba&#34;</span>]
+}
+</code></pre></div><ul>
+<li>Invite user to your organization</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;github_membership&#34;</span> <span style="color:#e6db74">&#34;membership_for_users&#34;</span> {
+  <span style="color:#a6e22e">for_each</span> = toset(var.<span style="color:#a6e22e">github_members</span>)
+  <span style="color:#a6e22e">username</span> = each.<span style="color:#a6e22e">key</span>
+  <span style="color:#a6e22e">role</span>     = <span style="color:#e6db74">&#34;member&#34;</span>
+}
+</code></pre></div><blockquote>
 <p>Note: organization name and token to interact with github apis is given in first step</p>
 </blockquote>
-
 <p>If we run terraform plan and apply with above content, terraform will invite <code>dineshba</code> to join <code>some-org</code> github organisation</p>
-
 <ul>
-<li><p>Use a team in your organization if it is already present</p>
-
-<pre><code class="language-tf"># use data-block to read team information, as team is already present
-data &quot;github_team&quot; &quot;some_team&quot; { 
-slug = &quot;some-team&quot;
-}
-</code></pre></li>
-
-<li><p>Create a team if you want to create some-team for this use-case</p>
-
-<pre><code class="language-tf"># use this resource-block to create/update team as team is already not present
-resource &quot;github_team&quot; &quot;some_team&quot; { 
-name        = &quot;some-team&quot;
-description = &quot;Some cool team&quot;
-privacy     = &quot;closed&quot;
-}
-
-# provide necessary repository access to the team
-resource &quot;github_team_repository&quot; &quot;some_team_repo&quot; {
-team_id    = &quot;${github_team.some_team.id}&quot;
-repository = &quot;some-repo&quot;
-permission = &quot;pull&quot;
-}
-</code></pre></li>
+<li>Use a team in your organization if it is already present</li>
 </ul>
-
-<p>If we run terraform plan and apply with above content, terraform will create a team called <code>some-team</code> and provide pull access to this team members for the repo <code>some-repo</code></p>
-
-<ul>
-<li><p>Add newly added person to this team</p>
-
-<pre><code class="language-tf">resource &quot;github_team_membership&quot; &quot;some_team_team_membership&quot; {
-for_each = toset(var.github_members)
-team_id  = data.github_team.some_team.id  # use resource instead of data if team is created by terraform
-username = each.key
-role     = &quot;member&quot;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#75715e"># use data-block to read team information, as team is already present
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#e6db74">&#34;github_team&#34;</span> <span style="color:#e6db74">&#34;some_team&#34;</span> { 
+  <span style="color:#a6e22e">slug</span> = <span style="color:#e6db74">&#34;some-team&#34;</span>
 }
-</code></pre></li>
-
-<li><p>Thats all, do
-&gt; Create github token and provide to terraform, so that terraform can do things on our behalf</p>
-
-<pre><code class="language-sh">export TF_VAR_github_token=&lt;your-personal-github-token-created-in-UI&gt;
-</code></pre>
-
-<p>Run terraform</p>
-
-<pre><code class="language-sh">terraform init
+</code></pre></div><ul>
+<li>Create a team if you want to create some-team for this use-case</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#75715e"># use this resource-block to create/update team as team is already not present
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;github_team&#34;</span> <span style="color:#e6db74">&#34;some_team&#34;</span> { 
+  <span style="color:#a6e22e">name</span>        = <span style="color:#e6db74">&#34;some-team&#34;</span>
+  <span style="color:#a6e22e">description</span> = <span style="color:#e6db74">&#34;Some cool team&#34;</span>
+  <span style="color:#a6e22e">privacy</span>     = <span style="color:#e6db74">&#34;closed&#34;</span>
+}<span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"># provide necessary repository access to the team
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;github_team_repository&#34;</span> <span style="color:#e6db74">&#34;some_team_repo&#34;</span> {
+  <span style="color:#a6e22e">team_id</span>    = <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">github_team</span>.<span style="color:#a6e22e">some_team</span>.<span style="color:#a6e22e">id</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+  <span style="color:#a6e22e">repository</span> = <span style="color:#e6db74">&#34;some-repo&#34;</span>
+  <span style="color:#a6e22e">permission</span> = <span style="color:#e6db74">&#34;pull&#34;</span>
+}
+</code></pre></div><p>If we run terraform plan and apply with above content, terraform will create a team called <code>some-team</code> and provide pull access to this team members for the repo <code>some-repo</code></p>
+<ul>
+<li>Add newly added person to this team</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tf" data-lang="tf"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;github_team_membership&#34;</span> <span style="color:#e6db74">&#34;some_team_team_membership&#34;</span> {
+  <span style="color:#a6e22e">for_each</span> = toset(var.<span style="color:#a6e22e">github_members</span>)
+  <span style="color:#a6e22e">team_id</span>  = data.<span style="color:#a6e22e">github_team</span>.<span style="color:#a6e22e">some_team</span>.<span style="color:#a6e22e">id</span><span style="color:#75715e">  # use resource instead of data if team is created by terraform
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">username</span> = each.<span style="color:#a6e22e">key</span>
+  <span style="color:#a6e22e">role</span>     = <span style="color:#e6db74">&#34;member&#34;</span>
+}
+</code></pre></div><ul>
+<li>Thats all, do</li>
+</ul>
+<blockquote>
+<p>Create github token and provide to terraform, so that terraform can do things on our behalf</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">export TF_VAR_github_token<span style="color:#f92672">=</span>&lt;your-personal-github-token-created-in-UI&gt;
+</code></pre></div><p>Run terraform</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">terraform init
 terraform plan
 terraform apply
-</code></pre></li>
-
-<li><p>Add this steps to CI/CD to make things much more simple. I am not covering this as part of this blog</p></li>
+</code></pre></div><ul>
+<li>Add this steps to CI/CD to make things much more simple. I am not covering this as part of this blog</li>
 </ul>
-
 <p>Please try and share your feedbacks below</p>
 
 </div>
