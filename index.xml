@@ -14,9 +14,8 @@
       
       <guid>https://dineshba.github.io/posts/terraform_deadlocks/</guid>
       <description>Recently I encountered a problem with the terraform code that I have written. It created a deadlock between resources.
-Example: resource &amp;#34;google_compute_instance_template&amp;#34; &amp;#34;instance_template&amp;#34; { } resource &amp;#34;google_compute_instance_group_manager&amp;#34; &amp;#34;igm&amp;#34; { version { instance_template = google_compute_instance_template.instance_template.id } } Whenever there is a change in config of google_compute_instance_template, terraform will delete and create it freshly as google_compute_instance_template is immutable resource.
-So plan will show something like this
-Plan: 1 to add, 1 to change, 1 to destroy.</description>
+ Example Problem Solutions: (I came cross)  Best/Easy/Final Solution Okay Solution Worst Solution   References  Example resource &amp;#34;google_compute_instance_template&amp;#34; &amp;#34;instance_template&amp;#34; { } resource &amp;#34;google_compute_instance_group_manager&amp;#34; &amp;#34;igm&amp;#34; { version { instance_template = google_compute_instance_template.instance_template.id } }  Note: resource google_compute_instance_group_manager dependson resource google_compute_instance_template
+ Problem Whenever there is a change in config of google_compute_instance_template, terraform will delete and create it freshly (as google_compute_instance_template is immutable resource)</description>
     </item>
     
     <item>

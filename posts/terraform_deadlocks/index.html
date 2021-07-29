@@ -52,7 +52,19 @@
   <h1>Avoid Deadlocks in Terraform</h1>
   <time datetime=2021-07-29T16:12:28&#43;0530 class="post-date">Thu, Jul 29, 2021</time>
   <p>Recently I encountered a problem with the <strong>terraform code that I have written</strong>. It created a <strong>deadlock between resources</strong>.</p>
-<h4 id="example">Example:</h4>
+<ul>
+<li><a href="#example">Example</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#solutions-i-came-cross">Solutions: (I came cross)</a>
+<ul>
+<li><a href="#besteasyfinal-solution">Best/Easy/Final Solution</a></li>
+<li><a href="#okay-solution">Okay Solution</a></li>
+<li><a href="#worst-solution">Worst Solution</a></li>
+</ul>
+</li>
+<li><a href="#references">References</a></li>
+</ul>
+<h4 id="example">Example</h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
 }
 
@@ -61,7 +73,11 @@
     instance_template <span style="color:#f92672">=</span> <span style="color:#66d9ef">google_compute_instance_template</span>.<span style="color:#66d9ef">instance_template</span>.<span style="color:#66d9ef">id</span>
   }
 }
-</code></pre></div><p>Whenever there is a change in config of <code>google_compute_instance_template</code>, terraform will delete and create it freshly as <code>google_compute_instance_template</code> is immutable resource.</p>
+</code></pre></div><blockquote>
+<p>Note: resource <code>google_compute_instance_group_manager</code> dependson resource <code>google_compute_instance_template</code></p>
+</blockquote>
+<h4 id="problem">Problem</h4>
+<p>Whenever there is a change in config of <code>google_compute_instance_template</code>, terraform will delete and create it freshly (as <code>google_compute_instance_template</code> is immutable resource)</p>
 <p>So plan will show something like this</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Plan: <span style="color:#ae81ff">1</span> to add, <span style="color:#ae81ff">1</span> to change, <span style="color:#ae81ff">1</span> to destroy.
 </code></pre></div><ul>
@@ -124,6 +140,12 @@ terraform apply $@
 <ul>
 <li>Append the <code>google_compute_instance_template</code> name suffix to depend resource&rsquo;s name (in this case, <code>google_compute_instance_group_manager</code>)</li>
 <li>This will recreate the all dependent resources whenever there is a change in <code>google_compute_instance_template</code>. Very destructive solution 🤮🤯😵‍💫</li>
+</ul>
+<h4 id="references">References</h4>
+<ul>
+<li><a href="https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#create_before_destroy">https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#create_before_destroy</a></li>
+<li><a href="https://github.com/hashicorp/terraform/issues/6234#event-2551997957">https://github.com/hashicorp/terraform/issues/6234#event-2551997957</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_template#using-with-instance-group-manager">https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_template#using-with-instance-group-manager</a></li>
 </ul>
 
 </div>
