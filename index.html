@@ -52,6 +52,20 @@
     <div class="posts">
 <article class="post">
   <h1 class="post-title">
+    <a href="https://dineshba.github.io/posts/terraform_deadlocks/">Avoid Deadlocks in Terraform</a>
+  </h1>
+  <time datetime="2021-07-29T16:12:28&#43;0530" class="post-date">Thu, Jul 29, 2021</time>
+  Recently I encountered a problem with the terraform code that I have written. It created a deadlock between resources.
+Example: resource &#34;google_compute_instance_template&#34; &#34;instance_template&#34; { } resource &#34;google_compute_instance_group_manager&#34; &#34;igm&#34; { version { instance_template = google_compute_instance_template.instance_template.id } } Whenever there is a change in config of google_compute_instance_template, terraform will delete and create it freshly as google_compute_instance_template is immutable resource.
+So plan will show something like this
+Plan: 1 to add, 1 to change, 1 to destroy.
+  
+  <div class="read-more-link">
+    <a href="/posts/terraform_deadlocks/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
     <a href="https://dineshba.github.io/posts/github-actions-approval/">Github actions with Manual Approval Jobs</a>
   </h1>
   <time datetime="2021-07-21T08:05:15&#43;0530" class="post-date">Wed, Jul 21, 2021</time>

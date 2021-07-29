@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.86.0" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Avoid Deadlocks in Terraform &middot; Dinesh&#39;s Blog</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Dinesh&#39;s Blog</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="/talks"> My Talks </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Avoid Deadlocks in Terraform</h1>
+  <time datetime=2021-07-29T16:12:28&#43;0530 class="post-date">Thu, Jul 29, 2021</time>
+  <p>Recently I encountered a problem with the <strong>terraform code that I have written</strong>. It created a <strong>deadlock between resources</strong>.</p>
+<h4 id="example">Example:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
+}
+
+<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_group_manager&#34; &#34;igm&#34;</span> {
+  <span style="color:#66d9ef">version</span> {
+    instance_template <span style="color:#f92672">=</span> <span style="color:#66d9ef">google_compute_instance_template</span>.<span style="color:#66d9ef">instance_template</span>.<span style="color:#66d9ef">id</span>
+  }
+}
+</code></pre></div><p>Whenever there is a change in config of <code>google_compute_instance_template</code>, terraform will delete and create it freshly as <code>google_compute_instance_template</code> is immutable resource.</p>
+<p>So plan will show something like this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">Plan: <span style="color:#ae81ff">1</span> to add, <span style="color:#ae81ff">1</span> to change, <span style="color:#ae81ff">1</span> to destroy.
+</code></pre></div><ul>
+<li>1 to add is new <code>google_compute_instance_template</code></li>
+<li>1 to delete is old/current <code>google_compute_instance_template</code></li>
+<li>1 to change is <code>google_compute_instance_group_manager</code>. It will be updated with new <code>google_compute_instance_template</code> id</li>
+</ul>
+<p>During apply, it will <strong>first delete</strong> google_compute_instance_template, then create it and then change google_compute_instance_group_manager</p>
+<p>While trying to delete, it will fail saying it is already in use by <code>google_compute_instance_group_manager</code></p>
+<h4 id="solutions-i-came-cross">Solutions: (I came cross)</h4>
+<ul>
+<li><a href="#besteasyfinal-solution">Best/Easy/Final Solution</a></li>
+<li><a href="#okay-solution">Okay Solution</a></li>
+<li><a href="#worst-solution">Worst Solution</a></li>
+</ul>
+<h5 id="besteasyfinal-solution">Best/Easy/Final Solution</h5>
+<p>Use <code>create_before_destroy</code> lifecycle meta-argument for <code>google_compute_instance_template</code> like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
+    <span style="color:#66d9ef">lifecycle</span> {
+        create_before_destroy <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+    }
+}
+</code></pre></div><p>During apply, it will <strong>first create</strong> new google_compute_instance_template, then change google_compute_instance_group_manager (and all other resources which depends on it) and then finally delete the old google_compute_instance_template</p>
+<h5 id="okay-solution">Okay Solution</h5>
+<blockquote>
+<p>Note: Use best solution only. This solution is just for learning purpose</p>
+</blockquote>
+<p>Whenever there is a change in <code>google_compute_instance_template</code> resource in terraform, follow below steps:</p>
+<ul>
+<li>Remove <code>google_compute_instance_template</code> state from tfstate</li>
+<li><code>terraform apply</code> (it doesn&rsquo;t know about existing template as we deleted it, it will create new one and change the google_compute_instance_group_manager)</li>
+<li>remove the old template manually or using <code>curl/gcloud commands</code></li>
+</ul>
+<p><strong>Sample code:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># content of ./terraform-apply.sh</span>
+
+<span style="color:#75715e"># get plan as json</span>
+terraform plan -out<span style="color:#f92672">=</span>tf-state
+terraform show -json tf-state &gt; tf-state.json
+<span style="color:#75715e"># detech re-create change in google_compute_instance_template</span>
+result<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cat tf-state.json <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>| jq <span style="color:#e6db74">&#39;.resource_changes[] | select( .type | contains(&#34;google_compute_instance_template&#34;))&#39;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>| jq <span style="color:#e6db74">&#39;. | select(.change.actions[] | contains(&#34;create&#34;)) | select(.change.actions[] | contains(&#34;delete&#34;))&#39;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>| jq -r .address<span style="color:#66d9ef">)</span>
+
+<span style="color:#75715e"># delete recreating google_compute_instance_template state entry in tf-state</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> $result <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+IFS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34; &#34;</span>
+<span style="color:#66d9ef">for</span> line in $result; <span style="color:#66d9ef">do</span>
+    printf <span style="color:#e6db74">&#34;Deleting State for: </span>$line<span style="color:#e6db74">\n&#34;</span> <span style="color:#f92672">&amp;&amp;</span> terraform state rm $line <span style="color:#f92672">||</span> exit 1;
+<span style="color:#66d9ef">done</span>
+<span style="color:#66d9ef">fi</span>
+<span style="color:#75715e"># terraform apply</span>
+terraform apply $@
+<span style="color:#75715e"># curl/gcloud command to remove the old google_compute_instance_template</span>
+</code></pre></div><h5 id="worst-solution">Worst Solution</h5>
+<blockquote>
+<p>Note: Use best solution only. This solution is just for learning purpose</p>
+</blockquote>
+<ul>
+<li>Append the <code>google_compute_instance_template</code> name suffix to depend resource&rsquo;s name (in this case, <code>google_compute_instance_group_manager</code>)</li>
+<li>This will recreate the all dependent resources whenever there is a change in <code>google_compute_instance_template</code>. Very destructive solution 🤮🤯😵‍💫</li>
+</ul>
+
+</div>
+
+<h2>Comments</h2>
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-dineshba-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>

@@ -6,7 +6,19 @@
     <description>Recent content in Posts on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Jul 2021 08:05:15 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 Jul 2021 16:12:28 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Avoid Deadlocks in Terraform</title>
+      <link>https://dineshba.github.io/posts/terraform_deadlocks/</link>
+      <pubDate>Thu, 29 Jul 2021 16:12:28 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/terraform_deadlocks/</guid>
+      <description>Recently I encountered a problem with the terraform code that I have written. It created a deadlock between resources.
+Example: resource &amp;#34;google_compute_instance_template&amp;#34; &amp;#34;instance_template&amp;#34; { } resource &amp;#34;google_compute_instance_group_manager&amp;#34; &amp;#34;igm&amp;#34; { version { instance_template = google_compute_instance_template.instance_template.id } } Whenever there is a change in config of google_compute_instance_template, terraform will delete and create it freshly as google_compute_instance_template is immutable resource.
+So plan will show something like this
+Plan: 1 to add, 1 to change, 1 to destroy.</description>
+    </item>
+    
     <item>
       <title>Github actions with Manual Approval Jobs</title>
       <link>https://dineshba.github.io/posts/github-actions-approval/</link>
