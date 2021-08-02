@@ -87,24 +87,40 @@
 </ul>
 <p>During apply, it will <strong>first delete</strong> google_compute_instance_template, then create it and then change google_compute_instance_group_manager</p>
 <p>While trying to delete, it will fail saying it is already in use by <code>google_compute_instance_group_manager</code></p>
-<h4 id="solutions-i-came-cross-in-reverse-order">Solutions: (I came cross in reverse order)</h4>
+<h4 id="solutions-i-came-cross-in-below-order">Solutions: (I came cross in below order)</h4>
 <ul>
-<li><a href="#besteasyfinal-solution">Best/Easy/Final Solution</a></li>
-<li><a href="#okay-solution">Okay Solution</a></li>
 <li><a href="#worst-solution">Worst Solution</a></li>
+<li><a href="#okay-solution">Okay Solution</a></li>
+<li><a href="#besteasyfinal-solution">Best/Easy/Final Solution</a></li>
 </ul>
-<h5 id="besteasyfinal-solution">Best/Easy/Final Solution</h5>
-<p>Use <code>create_before_destroy</code> lifecycle meta-argument for <code>google_compute_instance_template</code> like</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
-    <span style="color:#66d9ef">lifecycle</span> {
-        create_before_destroy <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
-    }
-}
-</code></pre></div><p>During apply, it will <strong>first create</strong> new google_compute_instance_template, then change google_compute_instance_group_manager (and all other resources which depends on it) and then finally delete the old google_compute_instance_template</p>
-<h5 id="okay-solution">Okay Solution</h5>
 <blockquote>
-<p>Note: Use best solution only. This solution is just for learning purpose</p>
+<p>Note: Use best solution only. Other solutions are just for learning purpose</p>
 </blockquote>
+<h5 id="worst-solution">Worst Solution</h5>
+<ul>
+<li>Append the <code>google_compute_instance_template</code> name to depend resource&rsquo;s name (in this case, <code>google_compute_instance_group_manager</code>)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
+  name_prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;my-template&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # while create it will append some random numbers to the end
+</span><span style="color:#75715e">  # In this way, whenever it is recreated, name will be changed.
+</span><span style="color:#75715e"></span>}
+
+<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_group_manager&#34; &#34;igm&#34;</span> {
+  name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;igm-${google_compute_instance_template.instance_template.id}&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # whenever google_compute_instance_template changes, it will
+</span><span style="color:#75715e">  # recreate, which means name will change, which means name of
+</span><span style="color:#75715e">  # this resource will change. This way, we are forcing to
+</span><span style="color:#75715e">  # recreate this resource, whenever google_compute_instance_template
+</span><span style="color:#75715e">  # recreated
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">version</span> {
+    instance_template <span style="color:#f92672">=</span> <span style="color:#66d9ef">google_compute_instance_template</span>.<span style="color:#66d9ef">instance_template</span>.<span style="color:#66d9ef">id</span>
+  }
+}
+</code></pre></div><ul>
+<li>This will recreate the all dependent resources whenever there is a change in <code>google_compute_instance_template</code>. Very destructive solution 🤮🤯😵‍💫</li>
+</ul>
+<h5 id="okay-solution">Okay Solution</h5>
 <p>Whenever there is a change in <code>google_compute_instance_template</code> resource in terraform, follow below steps:</p>
 <ul>
 <li>Remove <code>google_compute_instance_template</code> state from tfstate</li>
@@ -133,14 +149,14 @@ IFS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34; &#34;</
 <span style="color:#75715e"># terraform apply</span>
 terraform apply $@
 <span style="color:#75715e"># curl/gcloud command to remove the old google_compute_instance_template</span>
-</code></pre></div><h5 id="worst-solution">Worst Solution</h5>
-<blockquote>
-<p>Note: Use best solution only. This solution is just for learning purpose</p>
-</blockquote>
-<ul>
-<li>Append the <code>google_compute_instance_template</code> name suffix to depend resource&rsquo;s name (in this case, <code>google_compute_instance_group_manager</code>)</li>
-<li>This will recreate the all dependent resources whenever there is a change in <code>google_compute_instance_template</code>. Very destructive solution 🤮🤯😵‍💫</li>
-</ul>
+</code></pre></div><h5 id="besteasyfinal-solution">Best/Easy/Final Solution</h5>
+<p>Use <code>create_before_destroy</code> lifecycle meta-argument for <code>google_compute_instance_template</code> like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
+    <span style="color:#66d9ef">lifecycle</span> {
+        create_before_destroy <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+    }
+}
+</code></pre></div><p>During apply, it will <strong>first create</strong> new google_compute_instance_template, then change google_compute_instance_group_manager (and all other resources which depends on it) and then finally delete the old google_compute_instance_template</p>
 <h4 id="references">References</h4>
 <ul>
 <li><a href="https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#create_before_destroy">https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#create_before_destroy</a></li>
