@@ -81,7 +81,7 @@
 </ul>
 <p>During apply, it will <strong>first delete</strong> google_compute_instance_template, then create it and then change google_compute_instance_group_manager</p>
 <p>While trying to delete, it will fail saying it is already in use by <code>google_compute_instance_group_manager</code></p>
-<h4 id="solutions-i-came-cross-in-below-order">Solutions: (I came cross in below order)</h4>
+<h4 id="solutions-i-came-across-in-below-order">Solutions: (I came across in below order)</h4>
 <ul>
 <li><a href="#worst-solution">Worst Solution</a></li>
 <li><a href="#okay-solution">Okay Solution</a></li>
@@ -92,7 +92,7 @@
 </blockquote>
 <h5 id="worst-solution">Worst Solution</h5>
 <ul>
-<li>Append the <code>google_compute_instance_template</code> name to depend resource&rsquo;s name (in this case, <code>google_compute_instance_group_manager</code>)</li>
+<li>Use name of <code>google_compute_instance_template</code> in name of the dependent resources (in this case, <code>google_compute_instance_group_manager</code>)</li>
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;google_compute_instance_template&#34; &#34;instance_template&#34;</span> {
   name_prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;my-template&#34;</span><span style="color:#75715e">
