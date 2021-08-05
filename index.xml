@@ -186,8 +186,9 @@ $ exec bash #created a bash shell and killed the current shell $ #do whatever yo
       
       <guid>https://dineshba.github.io/talks/</guid>
       <description>Recent Top
-  Power of Hashicorp Vault and it&amp;rsquo;s internal
-As we are started moving all our infra to cloud,secret management for the applications and also for the developers/infra admin is the challenging task. This talk will discuss about how Vault solves this problem and also lets understand the reasons behind the architecture of vault.    How to orchestrate containers and what are the components needed for it ?</description>
+  Deploying application securely using Hashicorp Vault
+Secret Management becomes tedious while dealing with a lot of users/applications. Let&#39;s try to deploy a sample application using Jenkins CI/CD to Kubernetes cluster with Hashicorp vault and understand how vault is able to solve it seamlessly.    Power of Hashicorp Vault and it&amp;rsquo;s internal
+As we are started moving all our infra to cloud,secret management for the applications and also for the developers/infra admin is the challenging task.</description>
     </item>
     
     <item>
