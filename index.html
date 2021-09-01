@@ -52,6 +52,20 @@
     <div class="posts">
 <article class="post">
   <h1 class="post-title">
+    <a href="https://dineshba.github.io/posts/terraform_state_mv/">Rename terraform module name or resource name without recreating it</a>
+  </h1>
+  <time datetime="2021-09-01T01:12:28&#43;0530" class="post-date">Wed, Sep 1, 2021</time>
+  Lets say you want to rename your module after terraform is applied atleast once.
+Example: Lets say you have a module access
+module &#34;access&#34; { source = &#34;...&#34; variables = &#34;...&#34; } and you want to rename it to iam like
+module &#34;iam&#34; { source = &#34;...&#34; variables = &#34;...&#34; } Normal ways: By destroying and recreating  Option1: Comment the module and apply (which will destroy it). And then rename and apply it (which will create it with new name) Option2: Using target destroy and apply like below  terraform apply -destroy -target module.
+  
+  <div class="read-more-link">
+    <a href="/posts/terraform_state_mv/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
     <a href="https://dineshba.github.io/posts/terraform_deadlocks/">Avoid Deadlocks in Terraform</a>
   </h1>
   <time datetime="2021-07-29T16:12:28&#43;0530" class="post-date">Thu, Jul 29, 2021</time>
