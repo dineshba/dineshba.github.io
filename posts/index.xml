@@ -6,7 +6,18 @@
     <description>Recent content in Posts on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 01 Sep 2021 01:12:28 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 15 Dec 2021 00:50:33 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Identity Federation</title>
+      <link>https://dineshba.github.io/posts/identity-federation/</link>
+      <pubDate>Wed, 15 Dec 2021 00:50:33 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/identity-federation/</guid>
+      <description>Before Identity Federation, lets talk about How are we accessing resources in Cloud
+Accessing resources in Cloud  Note: Application needs access to consume the above resources
+ Examples of above diagram  Application running in on-prem accessing GCP resources (like gcs bucket, container registry, S3, vault, etc) Application running in other cloud accessing GCP resources Github actions trying to deploy/create resources in Azure Jenkins running in Kubernetes trying to deploy things to AWS Application running in GCP cloud function trying to access to aws resource  Using Identities of that cloud  Create an Identity Attach permissions Create key/secret/token for that identity Share the key with application  What are the problems of using cloud identity outside that cloud ?</description>
+    </item>
+    
     <item>
       <title>Rename terraform module name or resource name without recreating it</title>
       <link>https://dineshba.github.io/posts/terraform_state_mv/</link>

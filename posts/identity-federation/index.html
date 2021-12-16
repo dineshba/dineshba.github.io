@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.86.0" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Identity Federation &middot; Dinesh&#39;s Blog</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://dineshba.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://dineshba.github.io/"><h1>Dinesh&#39;s Blog</h1></a>
+      <p class="lead">
+       Website to share my learnings 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://dineshba.github.io/">Home</a> </li>
+        <li><a href="https://github.com/dineshba/"> Github </a></li><li><a href="https://www.linkedin.com/in/dineshba/"> LinkedIn </a></li><li><a href="/talks"> My Talks </a></li><li><a href="https://stackoverflow.com/users/5305962/dinesh-balasubramanian"> Stackoverflow </a></li><li><a href="https://www.thoughtworks.com/profiles/dinesh-b"> Thoughtworks </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2021. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Identity Federation</h1>
+  <time datetime=2021-12-15T00:50:33&#43;0530 class="post-date">Wed, Dec 15, 2021</time>
+  <p>Before Identity Federation, lets talk about How are we accessing resources in Cloud</p>
+<h3 id="accessing-resources-in-cloud">Accessing resources in Cloud</h3>
+<p><img src="/wif_1.png" alt="wif_1"></p>
+<blockquote>
+<p>Note: Application needs <strong>access</strong> to consume the above resources</p>
+</blockquote>
+<h5 id="examples-of-above-diagram">Examples of above diagram</h5>
+<ul>
+<li>Application running in on-prem accessing GCP resources (like gcs bucket, container registry, S3, vault, etc)</li>
+<li>Application running in other cloud accessing GCP resources</li>
+<li>Github actions trying to deploy/create resources in Azure</li>
+<li>Jenkins running in Kubernetes trying to deploy things to AWS</li>
+<li>Application running in GCP cloud function trying to access to aws resource</li>
+</ul>
+<h4 id="using-identities-of-that-cloud">Using Identities of that cloud</h4>
+<p><img src="/wif_2.png" alt="wif_2"></p>
+<ul>
+<li>Create an Identity</li>
+<li>Attach permissions</li>
+<li>Create key/secret/token for that identity</li>
+<li>Share the key with application</li>
+</ul>
+<h4 id="what-are-the-problems-of-using-cloud-identity-outside-that-cloud-">What are the problems of using cloud identity outside that cloud ?</h4>
+<ul>
+<li>If there is expiration for key/secret/token, then <strong>rotating</strong> it
+<ul>
+<li>create new keys in cloud</li>
+<li>deploy/restart the all the applications (with their replicas) in proper order</li>
+<li>remove the old keys in cloud</li>
+</ul>
+</li>
+<li>If no expiration, <strong>static keys</strong></li>
+<li>Not only the configured application, <strong>anyone with key can access it</strong>
+<ul>
+<li>Developer can copy the key and use it from their local machine</li>
+<li>Developer can share the keys with co-workers (co-worker can also become ex-co-worker)</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>It became Secret management problem from Identity/Access management problem</p>
+</blockquote>
+<h4 id="how-will-we-do-it-if-the-application-is-in-the-same-cloud-">How will we do it, if the application is in the same cloud ?</h4>
+<p><img src="/wif_3.png" alt="wif_3"></p>
+<ul>
+<li>Attach Identity to that resource
+<ul>
+<li>Eg:
+<ul>
+<li><a href="https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances">Attaching ServiceAccount to GCP instance</a></li>
+<li><a href="https://aws.amazon.com/premiumsupport/knowledge-center/ec2-instance-access-s3-bucket/">Attaching IAM instance profile to the EC2 instance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Keyless authentication is the key 🙃</p>
+</blockquote>
+<h3 id="identity-federation">Identity Federation</h3>
+<ul>
+<li>What if we are able to use same identity across clouds.</li>
+<li>What if we are able to use one identity to exchange the another identity for limited period</li>
+</ul>
+<p>That is what <strong>Identity federation</strong> is.</p>
+<p><img src="/wif_4.png" alt="wif_4"></p>
+<ol>
+<li>Application get Identity key/secret/token from its own local Identity Provider
+<ul>
+<li>Each cloud will have its own Identity Provider</li>
+<li>Example custom Identity Provider: <a href="https://github.com/dexidp/dex">https://github.com/dexidp/dex</a></li>
+</ul>
+</li>
+<li>Application sends this Identity key/secret/token to the destination cloud&rsquo;s Token Provider</li>
+<li>Token Provider will validate this Identity key/secret/token against application&rsquo;s Identity Provider
+<ul>
+<li>Application&rsquo;s Identity Provider should be preconfigured in cloud&rsquo;s Token Provider</li>
+<li>Example Token Providers
+<ul>
+<li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html">AWS Security Token Service</a></li>
+<li><a href="https://cloud.google.com/iam/docs/reference/sts/rest">GCP Security Token Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Token Provider will issue a short lived token to Application
+<ul>
+<li>The token will have permission/role based on preconfigured values</li>
+</ul>
+</li>
+<li>Now, application can use to access resources in cloud</li>
+</ol>
+<h4 id="examples">Examples:</h4>
+<ul>
+<li>Deploy infra in google cloud using github actions (with github token). <a href="https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform#adding-a-google-cloud-workload-identity-provider">Refer</a></li>
+<li>Deploy infra in aws cloud using github actions (with github token). <a href="https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services">Refer</a></li>
+<li>Kubernetes pods access Vault using kubernetes service accounts. <a href="https://www.vaultproject.io/docs/auth/kubernetes">Refer</a></li>
+<li>Assume an AWS Role from a Google Cloud Instances without IAM keys. <a href="https://blog.doit-intl.com/assume-an-aws-role-from-a-google-cloud-without-using-iam-keys-55012b0fa74a">Refer</a></li>
+<li>Allow EC2 instance to access google container registry. <a href="https://cloud.google.com/iam/docs/configuring-workload-identity-federation#aws_1">Refer</a></li>
+<li>Allow particular instance of EC2 instance to talk to vault. <a href="https://www.vaultproject.io/docs/auth/aws">Refer</a></li>
+</ul>
+
+</div>
+
+<h2>Comments</h2>
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-dineshba-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-146789724-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </body>
+</html>
