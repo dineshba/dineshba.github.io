@@ -67,11 +67,10 @@
           <span style="color:#f92672">keys</span>:
             - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">key1</span>
               <span style="color:#f92672">secret</span>: <span style="color:#ae81ff">c2VjcmV0IGlzIHNlY3VyZQ==</span>
-            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">key2</span>
-              <span style="color:#f92672">secret</span>: <span style="color:#ae81ff">dGhpcyBpcyBwYXNzd29yZA==</span>
       - <span style="color:#f92672">identity</span>: {}
 </code></pre></div><blockquote>
-<p>We are using standard methods (like aesgcm) and static keys in above example</p>
+<p>We are using standard methods (like aesgcm) and static keys in above example
+<code>identity: {}</code> is very important if you already have a secret before configuring encryption. Details in next section</p>
 </blockquote>
 <h2 id="key-points-to-note">Key points to note</h2>
 <ul>
@@ -98,13 +97,10 @@
 </code></pre></div><p>And your kms provider should create the <code>unix:///var/run/kmsPlugin.sock</code> file and expose methods to encrypt/decrypt</p>
 <h2 id="test-the-encryption">Test the encryption</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># list keys in etcd</span>
-kubectl exec -it -n kube-system &lt;etcd-pod&gt; -- sh
-
-<span style="color:#75715e"># list keys</span>
-ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> etcdctl --endpoints 127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key get / --prefix --keys-only
+kubectl exec -it -n kube-system &lt;etcd-pod&gt; -- sh -c <span style="color:#e6db74">&#34;ETCDCTL_API=3 etcdctl --endpoints 127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key get / --prefix --keys-only&#34;</span>
 
 <span style="color:#75715e"># show one key&#39;s value</span>
-ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> etcdctl --endpoints 127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key get /registry/secrets/&lt;namespace&gt;/&lt;secret-name&gt;
+kubectl exec -it -n kube-system &lt;etcd-pod&gt; -- sh -c <span style="color:#e6db74">&#34;ETCDCTL_API=3 etcdctl --endpoints 127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key get /registry/secrets/&lt;namespace&gt;/&lt;secret-name&gt;&#34;</span>
 <span style="color:#75715e"># it should show as encrypted data. If it shows data in readable form, encryption at rest is not configured properly</span>
 </code></pre></div><h2 id="references">References</h2>
 <ul>
