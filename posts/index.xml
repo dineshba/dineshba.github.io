@@ -6,7 +6,19 @@
     <description>Recent content in Posts on Dinesh&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Dec 2021 00:50:33 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 Apr 2023 13:32:13 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Encrypt Kubernetes data at rest</title>
+      <link>https://dineshba.github.io/posts/encrypt-k8s-data/</link>
+      <pubDate>Sat, 22 Apr 2023 13:32:13 +0530</pubDate>
+      
+      <guid>https://dineshba.github.io/posts/encrypt-k8s-data/</guid>
+      <description>Encrypt Kubernetes data at rest: Kubernetes stores all of its data in etcd. Apiserver is the one which reads and writes data into etcd.
+So, before storing data into etcd, we can ask apiserver to encrypt the data and while it retrieve data from etcd, we can ask apiserver to decrypt the data.
+When we start api-server, we have to provide the encryption config with below flag:
+--encryption-provider-config=/etc/kubernetes/encryptionconfig.yaml Sample encryptionconfig.yaml apiVersion: apiserver.</description>
+    </item>
+    
     <item>
       <title>Identity Federation</title>
       <link>https://dineshba.github.io/posts/identity-federation/</link>
