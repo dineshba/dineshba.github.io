@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Dinesh&#39;s Blog</title>
+    <title>Dinesh Tech Bytes</title>
     <link>https://dineshba.github.io/</link>
-    <description>Recent content on Dinesh&#39;s Blog</description>
+    <description>Recent content on Dinesh Tech Bytes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 22 Apr 2023 13:32:13 +0530</lastBuildDate><atom:link href="https://dineshba.github.io/index.xml" rel="self" type="application/rss+xml" />
@@ -16,7 +16,7 @@
       <description>Encrypt Kubernetes data at rest: Kubernetes stores all of its data in etcd. Apiserver is the one which reads and writes data into etcd.
 So, before storing data into etcd, we can ask apiserver to encrypt the data and while it retrieve data from etcd, we can ask apiserver to decrypt the data.
 When we start api-server, we have to provide the encryption config with below flag:
---encryption-provider-config=/etc/kubernetes/encryptionconfig.yaml Sample encryptionconfig.yaml apiVersion: apiserver.</description>
+--encryption-provider-config=/etc/kubernetes/encryptionconfig.yaml # --encryption-provider-config-automatic-reload=true # optional Sample encryptionconfig.</description>
     </item>
     
     <item>
