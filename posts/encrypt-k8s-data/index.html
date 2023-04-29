@@ -51,13 +51,16 @@
     <div class="post">
   <h1>Encrypt Kubernetes data at rest</h1>
   <time datetime=2023-04-22T13:32:13&#43;0530 class="post-date">Sat, Apr 22, 2023</time>
-  <p>Kubernetes stores all of its data in etcd. Apiserver is the one component which reads and writes data into etcd.</p>
+  <p>Kubernetes stores all of its data in etcd. Apiserver is the only component which reads and writes data into etcd.</p>
 <p><img src="/k8s-cluster.png" alt="k8s-cluster.png"></p>
 <p>So, before storing data into etcd, we can ask apiserver to encrypt the data and while it retrieve data from etcd, we can ask apiserver to decrypt the data.</p>
 <p>When we start api-server, we have to provide the encryption config with below flag:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">--<span style="color:#ae81ff">encryption-provider-config=/etc/kubernetes/encryptionconfig.yaml</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">--<span style="color:#ae81ff">encryption-provider-config=/etc/kubernetes/enc/encryptionconfig.yaml</span>
 <span style="color:#75715e"># --encryption-provider-config-automatic-reload=true # optional</span>
-</code></pre></div><h3 id="sample-encryptionconfigyaml">Sample encryptionconfig.yaml</h3>
+</code></pre></div><blockquote>
+<p>Note: If apiserver is running as pod, remember to mount file <code>/etc/kubernetes/enc/encryptionconfig.yaml</code> to apiserver pod</p>
+</blockquote>
+<h3 id="sample-encryptionconfigyaml">Sample encryptionconfig.yaml</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apiserver.config.k8s.io/v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">EncryptionConfiguration</span>
 <span style="color:#f92672">resources</span>:
@@ -69,14 +72,16 @@
             - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">key1</span>
               <span style="color:#f92672">secret</span>: <span style="color:#ae81ff">c2VjcmV0IGlzIHNlY3VyZQ==</span>
       - <span style="color:#f92672">identity</span>: {}
-</code></pre></div><blockquote>
-<p>We are using standard methods (like aesgcm) and static keys in above example
-<code>identity: {}</code> is very important if you already have a secret before configuring encryption. Details in next section</p>
-</blockquote>
-<ul>
+</code></pre></div><ul>
 <li>Complete example file: <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers">https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers</a></li>
 <li>Available providers: <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers">https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers</a></li>
 </ul>
+<blockquote>
+<p>We are using standard method aesgcm and static keys in above example</p>
+</blockquote>
+<blockquote>
+<p><code>identity: {}</code> is very important if you already have a secret before configuring encryption. Details in next section</p>
+</blockquote>
 <h2 id="key-points-to-note">Key points to note</h2>
 <ul>
 <li>Only first provider is used for encryption</li>
@@ -89,7 +94,13 @@
 </blockquote>
 <h2 id="external-key-management-service">External Key Management Service</h2>
 <p>Encrypting secret data with a locally managed key protects against an etcd compromise, but it fails to protect against a host compromise.</p>
-<p>Instead of using local keys, we can use external key management service (KMS). We can use any service as KMS if it expose grpc methods with signature defined in <a href="https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#developing-a-kms-plugin-grpc-server">https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#developing-a-kms-plugin-grpc-server</a></p>
+<p>Instead of using local keys, we can use external key management service (KMS).</p>
+<h4 id="example-kms-providers">Example KMS providers</h4>
+<ul>
+<li><a href="https://github.com/Azure/kubernetes-kms">https://github.com/Azure/kubernetes-kms</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/k8s-cloudkms-plugin">https://github.com/GoogleCloudPlatform/k8s-cloudkms-plugin</a></li>
+<li><a href="https://github.com/kubernetes-sigs/aws-encryption-provider">https://github.com/kubernetes-sigs/aws-encryption-provider</a></li>
+</ul>
 <h4 id="sample-config-using-kms-provider">Sample config using KMS provider</h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">EncryptionConfig</span>
@@ -101,14 +112,10 @@
       <span style="color:#f92672">name</span>: <span style="color:#ae81ff">kms-plugin</span>
   <span style="color:#f92672">resources</span>:
   - <span style="color:#ae81ff">secrets</span>
-</code></pre></div><p>And your kms provider should create the <code>unix:///var/run/kmsPlugin.sock</code> file and expose methods to encrypt/decrypt</p>
-<h4 id="example-kms-providers">Example KMS providers</h4>
-<ul>
-<li><a href="https://github.com/Azure/kubernetes-kms">https://github.com/Azure/kubernetes-kms</a></li>
-<li><a href="https://github.com/GoogleCloudPlatform/k8s-cloudkms-plugin">https://github.com/GoogleCloudPlatform/k8s-cloudkms-plugin</a></li>
-<li><a href="https://github.com/kubernetes-sigs/aws-encryption-provider">https://github.com/kubernetes-sigs/aws-encryption-provider</a></li>
-</ul>
-<h2 id="test-the-encryption">Test the encryption</h2>
+</code></pre></div><h4 id="develop-your-own-kms-provider">Develop your own KMS provider</h4>
+<p>We can use any service as KMS provider if it expose grpc methods with signature defined in <a href="https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#developing-a-kms-plugin-grpc-server">https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#developing-a-kms-plugin-grpc-server</a></p>
+<p>Your kms provider should create the socket file and expose methods to encrypt/decrypt</p>
+<h2 id="commands-used-to-test-encryption">Commands used to test encryption</h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># list keys in etcd</span>
 kubectl exec -it -n kube-system &lt;etcd-pod&gt; -- sh -c <span style="color:#e6db74">&#34;ETCDCTL_API=3 etcdctl --endpoints 127.0.0.1:2379 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key get / --prefix --keys-only&#34;</span>
 

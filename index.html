@@ -55,10 +55,10 @@
     <a href="https://dineshba.github.io/posts/encrypt-k8s-data/">Encrypt Kubernetes data at rest</a>
   </h1>
   <time datetime="2023-04-22T13:32:13&#43;0530" class="post-date">Sat, Apr 22, 2023</time>
-  Kubernetes stores all of its data in etcd. Apiserver is the one component which reads and writes data into etcd.
+  Kubernetes stores all of its data in etcd. Apiserver is the only component which reads and writes data into etcd.
 So, before storing data into etcd, we can ask apiserver to encrypt the data and while it retrieve data from etcd, we can ask apiserver to decrypt the data.
 When we start api-server, we have to provide the encryption config with below flag:
---encryption-provider-config=/etc/kubernetes/encryptionconfig.yaml # --encryption-provider-config-automatic-reload=true # optional Sample encryptionconfig.yaml apiVersion: apiserver.
+--encryption-provider-config=/etc/kubernetes/enc/encryptionconfig.yaml # --encryption-provider-config-automatic-reload=true # optional  Note: If apiserver is running as pod, remember to mount file /etc/kubernetes/enc/encryptionconfig.
   
   <div class="read-more-link">
     <a href="/posts/encrypt-k8s-data/">Read More…</a>
