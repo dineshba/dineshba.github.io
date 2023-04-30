@@ -73,7 +73,7 @@
               <span style="color:#f92672">secret</span>: <span style="color:#ae81ff">c2VjcmV0IGlzIHNlY3VyZQ==</span>
       - <span style="color:#f92672">identity</span>: {}
 </code></pre></div><ul>
-<li>Complete example file: <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers">https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers</a></li>
+<li>Complete example file: <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration">https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration</a></li>
 <li>Available providers: <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers">https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers</a></li>
 </ul>
 <blockquote>
@@ -95,6 +95,19 @@
 <h2 id="external-key-management-service">External Key Management Service</h2>
 <p>Encrypting secret data with a locally managed key protects against an etcd compromise, but it fails to protect against a host compromise.</p>
 <p>Instead of using local keys, we can use external key management service (KMS).</p>
+<p>Almost each cloud provider is their own KMS solution.</p>
+<h4 id="example-key-management-service">Example Key Management Service:</h4>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/key-vault/general/">https://learn.microsoft.com/en-us/azure/key-vault/general/</a></li>
+<li><a href="https://cloud.google.com/security-key-management">https://cloud.google.com/security-key-management</a></li>
+<li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">https://docs.aws.amazon.com/kms/latest/developerguide/overview.html</a></li>
+</ul>
+<p>If we want to use it api-server, then api-server should know</p>
+<ul>
+<li>How to authenticate against this cloud ?</li>
+<li>How to interact with this encrypt/decrypt API ?</li>
+</ul>
+<p>So, if we put this logic in api-server, it will not scale. So kubernetes/kubernetes-community provides a <strong>common interface and anybody who adhers to it can act as KMS provider for api-server</strong>. <a href="https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#enabling-the-kms-supported-by-your-cloud-provider">https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/#enabling-the-kms-supported-by-your-cloud-provider</a></p>
 <h4 id="example-kms-providers">Example KMS providers</h4>
 <ul>
 <li><a href="https://github.com/Azure/kubernetes-kms">https://github.com/Azure/kubernetes-kms</a></li>
