@@ -99,9 +99,9 @@
 <p>Note: Without having each provider to attempt decryption, we cannot achieve key rotation and we cannot change from one encryption method to another.</p>
 </blockquote>
 <h2 id="external-key-management-service">External Key Management Service</h2>
-<p>Encrypting secret data with a locally managed key protects against an etcd compromise, but it fails to protect against a host compromise.</p>
+<p>Encrypting secret data with a locally managed key protects against an etcd compromise, <strong>but it fails to protect against a host compromise</strong>.</p>
 <p>Instead of using local keys, we can use external key management service (KMS).</p>
-<p>Almost each cloud provider is their own KMS solution.</p>
+<p>Almost each cloud-provider is providing their own KMS solution.</p>
 <h4 id="example-key-management-service">Example Key Management Service:</h4>
 <ul>
 <li><a href="https://learn.microsoft.com/en-us/azure/key-vault/general/">https://learn.microsoft.com/en-us/azure/key-vault/general/</a></li>
