@@ -99,6 +99,11 @@
 <p>Note: Without having each provider to attempt decryption, we cannot achieve key rotation and we cannot change from one encryption method to another.</p>
 </blockquote>
 <h2 id="external-key-management-service">External Key Management Service</h2>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/oGBO9ZArQj8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
 <p>Encrypting secret data with a locally managed key protects against an etcd compromise, <strong>but it fails to protect against a host compromise</strong>.</p>
 <p>Instead of using local keys, we can use external key management service (KMS).</p>
 <p>Almost each cloud-provider is providing their own KMS solution.</p>
