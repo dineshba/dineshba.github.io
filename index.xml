@@ -197,7 +197,7 @@ There are lot of themes available here. After some search, I landed to current t
       
       <guid>https://dineshba.github.io/posts/fzf/</guid>
       <description>Installation for new users $ brew install fzf $ $(brew --prefix)/opt/fzf/install # useful key bindings and fuzzy completion  Note: Its better to use key bindings and fuzzy completion
- Default options that I use export FZF_DEFAULT_OPTS=&amp;#39;--height 40% --reverse --border&amp;#39; My usages To Search in command history: CTRL + R
+ Default options that I use export FZF_DEFAULT_OPTS=&amp;#39;--height 40% --reverse --border&amp;#39; My usages   To Search in command history: CTRL + R
 To Change directory: cd + (CTRL + T) # type cd and then press CTRL plus T or cd ** + TAB To find and open files in vim(or any editor): vim $(fzf) vim + (CTRL + T) vim ** + TAB vim $(fzf --preview &amp;#39;cat {}&amp;#39;)  You can even search and open multiple files using tab</description>
     </item>
     
